@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace study_japanese.Models
 {
-    public class Config
+    public static class Config
     {
-        public static readonly string urlServer = "";
+        public static readonly string sqlConnect = @"Server=localhost;Port=5433;User Id=postgres;Password=1234;Database=Web_JP;";
         public static readonly string urlWeb = "https://www.google.com";
     }
 }

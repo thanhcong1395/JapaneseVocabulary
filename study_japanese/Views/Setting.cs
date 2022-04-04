@@ -1,4 +1,5 @@
-﻿using study_japanese.Models.Dto;
+﻿using study_japanese.Models;
+using study_japanese.Models.Dto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -8,12 +9,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using study_japanese.Models;
 
 namespace study_japanese.Views
 {
     public partial class Setting : Form
     {
         SettingInfoDto setConfig = new SettingInfoDto();
+        Models.Control ctrl = new Models.Control();
 
         public Setting()
         {
@@ -54,6 +57,21 @@ namespace study_japanese.Views
         private void mode2Mat_CheckedChanged(object sender, EventArgs e)
         {
             setConfig.mode = SettingInfoDto.enmMode.HAIMAT;
+        }
+
+        private void link_Click(object sender, EventArgs e)
+        {
+            System.Diagnostics.Process.Start(Config.urlWeb);
+        }
+
+        private void exit_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void ok_Click(object sender, EventArgs e)
+        {
+            ctrl.showNewWord(setConfig);
         }
     }
 }
