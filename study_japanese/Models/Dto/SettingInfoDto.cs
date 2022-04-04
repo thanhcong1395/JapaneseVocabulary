@@ -14,7 +14,7 @@ namespace study_japanese.Models.Dto
             HAIMAT
         }
         public bool furigana { get; set; }
-        public bool mean { get; set; }
+        public bool means { get; set; }
         public bool hanTu { get; set; }
         public bool example { get; set; }
         public enmMode mode { get; set; }

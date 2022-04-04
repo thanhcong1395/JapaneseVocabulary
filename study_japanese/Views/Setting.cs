@@ -21,7 +21,7 @@ namespace study_japanese.Views
         public Setting()
         {
             setConfig.furigana = true;
-            setConfig.mean = true;
+            setConfig.means = true;
             setConfig.hanTu = false;
             setConfig.example = false;
             setConfig.mode = SettingInfoDto.enmMode.MOTMAT;
@@ -36,7 +36,7 @@ namespace study_japanese.Views
 
         private void nghia_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.mean = furigana.Checked;
+            setConfig.means = furigana.Checked;
         }
 
         private void hanTu_CheckedChanged(object sender, EventArgs e)
@@ -46,7 +46,7 @@ namespace study_japanese.Views
 
         private void viDu_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.mean = viDu.Checked;
+            setConfig.means = viDu.Checked;
         }
 
         private void mode1Mat_CheckedChanged(object sender, EventArgs e)

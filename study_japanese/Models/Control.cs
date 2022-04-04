@@ -10,6 +10,7 @@ using System.Text;
 using Npgsql;
 using study_japanese.Models;
 using System.Windows.Forms;
+using System.Drawing;
 
 namespace study_japanese.Models
 {
@@ -17,6 +18,10 @@ namespace study_japanese.Models
     {
         private List<TuVungTableDto> allWords = new List<TuVungTableDto>();
         private List<TuVungTableDto> newWords = new List<TuVungTableDto>();
+        //private static System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
+        private Random random = new Random();
+        private TuVungTableDto currentWord = new TuVungTableDto();
+        //private ThreeLine form3 = new ThreeLine();
 
 
         public Control()
@@ -65,7 +70,7 @@ namespace study_japanese.Models
 
             //// đọc id từ đã học
             string[] oldWordsIdString;
-            if(File.Exists((".\\oldwords.txt")))
+            if (File.Exists((".\\oldwords.txt")))
             {
                 oldWordsIdString = File.ReadAllLines(".\\oldwords.txt");
                 foreach (var e in oldWordsIdString)
@@ -78,9 +83,9 @@ namespace study_japanese.Models
             }
 
             // so sánh với danh sách từ đã đọc và từ db -> lấy ra từ mới
-            foreach(var e in allWords)
+            foreach (var e in allWords)
             {
-                if(!oldWordsId.Contains(e.Id))
+                if (!oldWordsId.Contains(e.Id))
                 {
                     newWords.Add(e);
                 }
@@ -89,25 +94,54 @@ namespace study_japanese.Models
 
         public void showNewWord(SettingInfoDto config)
         {
-            switch(config.mode)
+            switch (config.mode)
             {
                 case SettingInfoDto.enmMode.MOTMAT:
-                    if (config.furigana == true && config.hanTu == true && config.mean == true && config.example == false)
-                     {
-                        screen1();
+                    if (config.furigana == true && config.hanTu == true && config.means == true && config.example == false)
+                    {
+                        screen1(config.speed);
                     }
-                    
-                    
-                    
+
+
+
                     break;
                 case SettingInfoDto.enmMode.HAIMAT:
                     break;
             }
         }
 
-        private void screen1()
+        private Point location(int width, int height)
         {
-            //ThreeLine showNewWordForm = (ThreeLine)Application.OpenForms[1];
+            int x = Screen.PrimaryScreen.WorkingArea.Width;
+            int y = Screen.PrimaryScreen.WorkingArea.Height;
+            return new Point(x - width, y - height);
+        }
+
+
+        private void getRandomWord()
+        {
+            int index = random.Next(newWords.Count);
+            currentWord.Id = newWords[index].Id;
+            currentWord.Furigana = newWords[index].Furigana;
+            currentWord.HanTu = newWords[index].HanTu;
+            currentWord.Means = newWords[index].Means;
+            currentWord.Example = newWords[index].Example;
+
+        }
+
+        private void screen1(int speed)
+        {
+
+            ThreeLine form3 = new ThreeLine(speed, newWords);
+            form3.StartPosition = FormStartPosition.Manual;
+            form3.Location = location(form3.Width, form3.Height);
+            //getRandomWord();
+            //form3.showWord(currentWord);
+
+            
+            //timer.Start();
+            form3.Show();
+            //form.Close();
         }
 
          

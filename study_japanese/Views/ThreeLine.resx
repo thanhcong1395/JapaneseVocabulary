@@ -118,7 +118,7 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <assembly alias="System.Drawing" name="System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a" />
-  <data name="button2.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="back.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAShJREFUSEvt
         lkkOgkAQRWuvOFzA6NojOCyMUePC4fx6ANdKnNC09eNvQwxiAyIbXlIRqrrq2QQCUlLyd0xdOkFdJjxN
@@ -129,7 +129,7 @@
         AElFTkSuQmCC
 </value>
   </data>
-  <data name="button1.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="setting.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAt1JREFUSEvt
         VstqFEEUHcnEGNw5RrIRQdyoP6FforiQKK4iuNGVGwWDK92YiA80ik4eClG3/kF8foMiGiHjTD+nPKfm
@@ -147,7 +147,7 @@
         DipQq/0GopzwVwvPe/0AAAAASUVORK5CYII=
 </value>
   </data>
-  <data name="exit.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="no.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAASdJREFUSEvt
         lsFugkAURfkS0679BLGLptGmi2q/336A60qAYSDTe82dahRxACkbTjIR3pv3Th5hItHExL/jXPZsbb7S
@@ -158,7 +158,7 @@
         SUVORK5CYII=
 </value>
   </data>
-  <data name="ok.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+  <data name="yes.Image" type="System.Drawing.Bitmap, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
     <value>
         iVBORw0KGgoAAAANSUhEUgAAAB4AAAAeCAYAAAA7MK6iAAAABGdBTUEAALGPC/xhBQAAAOBJREFUSEvt
         lT0KwkAUhFNY22qlaKf38AC23sJSsPAAFh5OxcafTg8gmDVZnqPMwjMYNJKNFvvBQrID72OyLIkCgcA3
@@ -167,4 +167,7 @@
         LtT7tpTPmwcEWl6N1AGRllcjdfDMl17O9B34n9b5GAj8K1F0A2AujpHHEtsmAAAAAElFTkSuQmCC
 </value>
   </data>
+  <metadata name="timer1.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
+    <value>17, 17</value>
+  </metadata>
 </root>
