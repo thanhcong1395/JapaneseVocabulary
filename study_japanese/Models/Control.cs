@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using study_japanese.Models.Dto;
 using study_japanese.Views;
 using System.IO;
-using System.Text;
 using Npgsql;
 using study_japanese.Models;
 using System.Windows.Forms;
@@ -19,15 +18,15 @@ namespace study_japanese.Models
         private List<TuVungTableDto> allWords = new List<TuVungTableDto>();
         private List<TuVungTableDto> newWords = new List<TuVungTableDto>();
         //private static System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-        private Random random = new Random();
-        private TuVungTableDto currentWord = new TuVungTableDto();
+        //private Random random = new Random();
+        //private TuVungTableDto currentWord = new TuVungTableDto();
         //private ThreeLine form3 = new ThreeLine();
 
 
         public Control()
         {
             connectionDb();
-            getNewWords();
+
         }
 
         private void connectionDb()
@@ -61,7 +60,7 @@ namespace study_japanese.Models
             return new NpgsqlConnection(Config.sqlConnect);
         }
 
-        private void getNewWords()
+        public void getNewWords()
         {
             //bool ret = false;
             //int index = 0;
@@ -70,9 +69,9 @@ namespace study_japanese.Models
 
             //// đọc id từ đã học
             string[] oldWordsIdString;
-            if (File.Exists((".\\oldwords.txt")))
+            if (File.Exists(Config.oldWordFile))
             {
-                oldWordsIdString = File.ReadAllLines(".\\oldwords.txt");
+                oldWordsIdString = File.ReadAllLines(Config.oldWordFile);
                 foreach (var e in oldWordsIdString)
                 {
                     if (Int32.TryParse(e, out id))
@@ -81,7 +80,6 @@ namespace study_japanese.Models
                     }
                 }
             }
-
             // so sánh với danh sách từ đã đọc và từ db -> lấy ra từ mới
             foreach (var e in allWords)
             {
@@ -94,56 +92,13 @@ namespace study_japanese.Models
 
         public void showNewWord(SettingInfoDto config)
         {
-            switch (config.mode)
-            {
-                case SettingInfoDto.enmMode.MOTMAT:
-                    if (config.furigana == true && config.hanTu == true && config.means == true && config.example == false)
-                    {
-                        screen1(config.speed);
-                    }
-
-
-
-                    break;
-                case SettingInfoDto.enmMode.HAIMAT:
-                    break;
-            }
-        }
-
-        private Point location(int width, int height)
-        {
             int x = Screen.PrimaryScreen.WorkingArea.Width;
             int y = Screen.PrimaryScreen.WorkingArea.Height;
-            return new Point(x - width, y - height);
-        }
 
-
-        private void getRandomWord()
-        {
-            int index = random.Next(newWords.Count);
-            currentWord.Id = newWords[index].Id;
-            currentWord.Furigana = newWords[index].Furigana;
-            currentWord.HanTu = newWords[index].HanTu;
-            currentWord.Means = newWords[index].Means;
-            currentWord.Example = newWords[index].Example;
-
-        }
-
-        private void screen1(int speed)
-        {
-
-            ThreeLine form3 = new ThreeLine(speed, newWords);
+            ThreeLine form3 = new ThreeLine(config, newWords);
             form3.StartPosition = FormStartPosition.Manual;
-            form3.Location = location(form3.Width, form3.Height);
-            //getRandomWord();
-            //form3.showWord(currentWord);
-
-            
-            //timer.Start();
+            form3.Location = new Point(x - form3.Width, y - form3.Height);
             form3.Show();
-            //form.Close();
         }
-
-         
     }
 }

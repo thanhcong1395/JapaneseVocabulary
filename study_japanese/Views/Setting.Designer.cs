@@ -44,15 +44,16 @@ namespace study_japanese.Views
             this.label5 = new System.Windows.Forms.Label();
             this.ok = new System.Windows.Forms.Button();
             this.exit = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
             // 
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
-            this.pictureBox1.Location = new System.Drawing.Point(0, 0);
+            this.pictureBox1.Location = new System.Drawing.Point(-3, 0);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(464, 198);
+            this.pictureBox1.Size = new System.Drawing.Size(470, 198);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -224,12 +225,25 @@ namespace study_japanese.Views
             this.exit.UseVisualStyleBackColor = true;
             this.exit.Click += new System.EventHandler(this.exit_Click);
             // 
+            // textBox1
+            // 
+            this.textBox1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Location = new System.Drawing.Point(165, 336);
+            this.textBox1.MaxLength = 3;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(78, 29);
+            this.textBox1.TabIndex = 14;
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox1.TextChanged += new System.EventHandler(this.SpeedChanged);
+            this.textBox1.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.Speed_KeyPress);
+            // 
             // Setting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.ClientSize = new System.Drawing.Size(464, 380);
+            this.Controls.Add(this.textBox1);
             this.Controls.Add(this.exit);
             this.Controls.Add(this.ok);
             this.Controls.Add(this.label5);
@@ -268,5 +282,6 @@ namespace study_japanese.Views
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.Button ok;
         private System.Windows.Forms.Button exit;
+        private System.Windows.Forms.TextBox textBox1;
     }
 }

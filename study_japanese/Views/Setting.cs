@@ -9,7 +9,6 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using study_japanese.Models;
 
 namespace study_japanese.Views
 {
@@ -18,6 +17,7 @@ namespace study_japanese.Views
         SettingInfoDto setConfig = new SettingInfoDto();
         Models.Control ctrl = new Models.Control();
 
+
         public Setting()
         {
             setConfig.furigana = true;
@@ -25,8 +25,9 @@ namespace study_japanese.Views
             setConfig.hanTu = false;
             setConfig.example = false;
             setConfig.mode = SettingInfoDto.enmMode.MOTMAT;
-            setConfig.speed = 5;
+            setConfig.speed = 3;
             InitializeComponent();
+            this.textBox1.Text = "5";
         }
 
         private void furigana_CheckedChanged(object sender, EventArgs e)
@@ -36,7 +37,7 @@ namespace study_japanese.Views
 
         private void nghia_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.means = furigana.Checked;
+            setConfig.means = nghia.Checked;
         }
 
         private void hanTu_CheckedChanged(object sender, EventArgs e)
@@ -46,7 +47,7 @@ namespace study_japanese.Views
 
         private void viDu_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.means = viDu.Checked;
+            setConfig.example = viDu.Checked;
         }
 
         private void mode1Mat_CheckedChanged(object sender, EventArgs e)
@@ -71,7 +72,41 @@ namespace study_japanese.Views
 
         private void ok_Click(object sender, EventArgs e)
         {
+            this.Hide();
+            setConfig.speed = Convert.ToInt32(this.textBox1.Text);
+            ctrl.getNewWords();
             ctrl.showNewWord(setConfig);
+        }
+
+        public SettingInfoDto settingInfo()
+        {
+            return setConfig;
+        }
+
+        private void Speed_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if(!char.IsNumber(e.KeyChar) && (!char.IsControl(e.KeyChar)))
+            {
+                e.Handled = true;
+            }
+            else
+            {
+                e.Handled = false;
+            }    
+        }
+
+        private void SpeedChanged(object sender, EventArgs e)
+        {
+            int box = 0;
+            Int32.TryParse(this.textBox1.Text, out box);
+            if(box == 0 && this.textBox1.Text != string.Empty)
+            {
+                this.textBox1.Text = "1";
+            }
+            else if(box > 900 && this.textBox1.Text != string.Empty)
+            {
+                this.textBox1.Text = "900";
+            }
         }
     }
 }
