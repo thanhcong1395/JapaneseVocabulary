@@ -9,6 +9,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Microsoft.Win32;
 
 namespace study_japanese.Views
 {
@@ -76,11 +77,13 @@ namespace study_japanese.Views
             setConfig.speed = Convert.ToInt32(this.textBox1.Text);
             ctrl.getNewWords();
             ctrl.showNewWord(setConfig);
+            this.Show();
         }
 
-        public SettingInfoDto settingInfo()
+        private void startup()
         {
-            return setConfig;
+            RegistryKey reg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
+            reg.SetValue("Wiki Japan", Application.ExecutablePath.ToString());
         }
 
         private void Speed_KeyPress(object sender, KeyPressEventArgs e)

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-
+using study_japanese;
 namespace study_japanese.Views
 {
     public partial class ThreeLine : Form
@@ -55,14 +55,12 @@ namespace study_japanese.Views
         {
             this.timer1.Stop();
             this.Close();
-            Application.Restart();
         }
 
         private void back_Click(object sender, EventArgs e)
         {
             this.timer1.Stop();
             this.Close();
-            Application.Restart();
         }
 
         private void getRandomWord()

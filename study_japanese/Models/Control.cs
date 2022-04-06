@@ -98,7 +98,7 @@ namespace study_japanese.Models
             ThreeLine form3 = new ThreeLine(config, newWords);
             form3.StartPosition = FormStartPosition.Manual;
             form3.Location = new Point(x - form3.Width, y - form3.Height);
-            form3.Show();
+            form3.ShowDialog();
         }
     }
 }

@@ -206,9 +206,9 @@ namespace study_japanese.Views
             this.ok.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.ok.ForeColor = System.Drawing.Color.Gray;
             this.ok.Image = ((System.Drawing.Image)(resources.GetObject("ok.Image")));
-            this.ok.Location = new System.Drawing.Point(422, 217);
+            this.ok.Location = new System.Drawing.Point(417, 221);
             this.ok.Name = "ok";
-            this.ok.Size = new System.Drawing.Size(30, 30);
+            this.ok.Size = new System.Drawing.Size(35, 35);
             this.ok.TabIndex = 12;
             this.ok.UseVisualStyleBackColor = true;
             this.ok.Click += new System.EventHandler(this.ok_Click);
@@ -218,9 +218,9 @@ namespace study_japanese.Views
             this.exit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.exit.ForeColor = System.Drawing.Color.Gray;
             this.exit.Image = ((System.Drawing.Image)(resources.GetObject("exit.Image")));
-            this.exit.Location = new System.Drawing.Point(422, 268);
+            this.exit.Location = new System.Drawing.Point(417, 271);
             this.exit.Name = "exit";
-            this.exit.Size = new System.Drawing.Size(30, 30);
+            this.exit.Size = new System.Drawing.Size(35, 35);
             this.exit.TabIndex = 13;
             this.exit.UseVisualStyleBackColor = true;
             this.exit.Click += new System.EventHandler(this.exit_Click);

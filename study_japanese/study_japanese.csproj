@@ -97,6 +97,11 @@
     <Compile Include="Models\Control.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Views\Setting.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -111,13 +116,9 @@
     </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Views\Setting.resx">
       <DependentUpon>Setting.cs</DependentUpon>
     </EmbeddedResource>
@@ -138,7 +139,36 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <None Include="Image\274860180_982734995708877_7488294828745915594_n.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\275207255_1114065022750041_4246513087092831998_n.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\275672518_269614868702409_2763464732366114529_n.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\275735177_1308476752977609_4224448322314811562_n.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\276949097_954775731903947_258851515191709005_n.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\277359450_5000975953316763_4934378212812337808_n.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\277362386_653646689039333_311505483138663082_n.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\277416869_391531816078320_1585387999075255822_n.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\277609458_394133262555323_4848129535902132784_n.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Image\277682094_338510611593659_8821471506524573258_n.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="packages\System.Text.Json.6.0.0\build\System.Text.Json.targets" Condition="Exists('packages\System.Text.Json.6.0.0\build\System.Text.Json.targets')" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
