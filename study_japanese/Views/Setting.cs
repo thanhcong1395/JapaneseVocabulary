@@ -15,9 +15,8 @@ namespace study_japanese.Views
 {
     public partial class Setting : Form
     {
-        SettingInfoDto setConfig = new SettingInfoDto();
-        Models.Control ctrl = new Models.Control();
-
+        private SettingInfoDto setConfig = new SettingInfoDto();
+        public bool exitApp = false;
 
         public Setting()
         {
@@ -68,6 +67,7 @@ namespace study_japanese.Views
 
         private void exit_Click(object sender, EventArgs e)
         {
+            this.exitApp = true;
             this.Close();
         }
 
@@ -75,9 +75,6 @@ namespace study_japanese.Views
         {
             this.Hide();
             setConfig.speed = Convert.ToInt32(this.textBox1.Text);
-            ctrl.getNewWords();
-            ctrl.showNewWord(setConfig);
-            this.Show();
         }
 
         private void startup()
@@ -95,7 +92,7 @@ namespace study_japanese.Views
             else
             {
                 e.Handled = false;
-            }    
+            }
         }
 
         private void SpeedChanged(object sender, EventArgs e)
@@ -110,6 +107,11 @@ namespace study_japanese.Views
             {
                 this.textBox1.Text = "900";
             }
+        }
+
+        public SettingInfoDto getConfig()
+        {
+            return this.setConfig;
         }
     }
 }

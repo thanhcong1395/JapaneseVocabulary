@@ -1,6 +1,4 @@
-﻿using study_japanese.Models;
-using study_japanese.Models.Dto;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,63 +8,39 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using study_japanese;
+using study_japanese.Models;
+using study_japanese.Models.Dto;
+
 namespace study_japanese.Views
 {
-    public partial class ThreeLine : Form
+    public partial class NewWords : Form
     {
-        List<TuVungTableDto> newWords = new List<TuVungTableDto>();
-        Random random = new Random();
-        TuVungTableDto currentWord = new TuVungTableDto();
-        SettingInfoDto config;
+        private List<TuVungTableDto> newWords = new List<TuVungTableDto>();
+        private Logo golo =  new Logo();
+        private Setting settingMode = new Setting();
+        private SettingInfoDto config = new SettingInfoDto();
         private bool firstShow;
+        private TuVungTableDto currentWord = new TuVungTableDto();
+        private Random random = new Random();
 
-        public ThreeLine(SettingInfoDto config, List<TuVungTableDto> newWords)
+        public NewWords()
         {
             InitializeComponent();
+            this.WindowLocation();
+            this.showLogo();
+            this.getNewWord();
+            this.config = this.settingMode.getConfig();
+            this.timer2.Interval = this.config.speed * 1000;
+            this.timer2.Start();
             this.firstShow = true;
-            this.config = config;
-            this.timer1.Interval = this.config.speed * 1000;
-            this.timer1.Start();
-            this.newWords = newWords;
             this.getRandomWord();
             this.showWord();
-        }
-
-        private void ThreeLine_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void yes_Click(object sender, EventArgs e)
-        {
-            string[] id = new string[1];
-            id[0] = currentWord.Id.ToString();
-            _event();
-            File.AppendAllLines(Config.oldWordFile, id);
-        }
-
-        private void no_Click(object sender, EventArgs e)
-        {
-            _event();
-        }
-
-        private void setting_Click(object sender, EventArgs e)
-        {
-            this.timer1.Stop();
-            this.Close();
-        }
-
-        private void back_Click(object sender, EventArgs e)
-        {
-            this.timer1.Stop();
-            this.Close();
         }
 
         private void getRandomWord()
         {
             int index = random.Next(newWords.Count);
-            
+
             this.currentWord.Id = newWords[index].Id;
             this.currentWord.Furigana = newWords[index].Furigana;
             this.currentWord.HanTu = newWords[index].HanTu;
@@ -74,14 +48,50 @@ namespace study_japanese.Views
             this.currentWord.Example = newWords[index].Example;
         }
 
-        private void timer1_Tick(object sender, EventArgs e)
+        private void getNewWord()
         {
-            _event();
+            Query query = new Query();
+            this.newWords = query.getNewWords();
         }
 
-        private void _event ()
+        private void WindowLocation()
         {
-            timer1.Interval = this.config.speed * 1000;
+            int x = Screen.PrimaryScreen.WorkingArea.Width;
+            int y = Screen.PrimaryScreen.WorkingArea.Height;
+
+            this.StartPosition = FormStartPosition.Manual;
+            this.Location = new Point(x - this.Width, y - this.Height);
+        }
+
+        private void setting_Click(object sender, EventArgs e)
+        {
+            this.timer2.Stop();
+            this.Hide();
+            this.settingMode.ShowDialog();
+            
+            if (this.settingMode.exitApp)
+            {
+                this.Close();
+                Application.Exit();
+            }
+            else
+            {
+                this.config = this.settingMode.getConfig();
+                this.timer2.Interval = this.config.speed * 1000;
+                this.timer2.Start();
+                this.Show();
+            }
+        }
+
+        private void showLogo()
+        {
+            this.Hide();
+            this.golo.ShowDialog();
+        }
+
+        private void _event()
+        {
+            timer2.Interval = this.config.speed * 1000;
             if (this.firstShow == true)
             {
                 this.getRandomWord();
@@ -122,7 +132,7 @@ namespace study_japanese.Views
                     {
                         this.screen7();
                     }
-                    else if(this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == true)
+                    else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == true)
                     {
                         this.screen8();
                     }
@@ -188,7 +198,7 @@ namespace study_japanese.Views
                     {
                         this.screen7();
                     }
-                    else if(this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == true)
+                    else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == true)
                     {
                         this.screen19();
                     }
@@ -301,7 +311,7 @@ namespace study_japanese.Views
 
         private void screen8()
         {
-            if(this.firstShow)
+            if (this.firstShow)
             {
                 screen1();
             }
@@ -466,7 +476,53 @@ namespace study_japanese.Views
             this.firstShow = !this.firstShow;
         }
 
+        // event
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            this.golo.Close();
+        }
 
+        private void timer2_Tick(object sender, EventArgs e)
+        {
+           this._event();
+        }
+
+        private void yes_Click(object sender, EventArgs e)
+        {
+            string[] id = new string[1];
+            id[0] = currentWord.Id.ToString();
+            this._event();
+            File.AppendAllLines(Config.oldWordFile, id);
+        }
+
+        private void no_Click(object sender, EventArgs e)
+        {
+            this._event();
+        }
+
+        private void back_Click(object sender, EventArgs e)
+        {
+            this.settingMode.Close();
+            this.Close();
+            Application.Exit();
+        }
+
+        private void showEvent(object sender, EventArgs e)
+        {
+            if(this.settingMode.exitApp)
+            {
+                this.Close();
+                Application.Exit();
+            }
+        }
+
+        private void loadEvent(object sender, EventArgs e)
+        {
+            if (this.settingMode.exitApp)
+            {
+                this.Close();
+                Application.Exit();
+            }
+        }
     }
-        
 }

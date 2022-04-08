@@ -178,7 +178,7 @@ namespace study_japanese.Views
             // link
             // 
             this.link.AutoSize = true;
-            this.link.BackColor = System.Drawing.Color.Transparent;
+            this.link.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(184)))), ((int)(((byte)(178)))), ((int)(((byte)(182)))));
             this.link.Cursor = System.Windows.Forms.Cursors.Hand;
             this.link.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.link.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));

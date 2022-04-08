@@ -13,20 +13,13 @@ using System.Drawing;
 
 namespace study_japanese.Models
 {
-    public class Control
+    public class Query
     {
         private List<TuVungTableDto> allWords = new List<TuVungTableDto>();
-        private List<TuVungTableDto> newWords = new List<TuVungTableDto>();
-        //private static System.Windows.Forms.Timer timer = new System.Windows.Forms.Timer();
-        //private Random random = new Random();
-        //private TuVungTableDto currentWord = new TuVungTableDto();
-        //private ThreeLine form3 = new ThreeLine();
 
-
-        public Control()
+        public Query()
         {
             connectionDb();
-
         }
 
         private void connectionDb()
@@ -60,14 +53,13 @@ namespace study_japanese.Models
             return new NpgsqlConnection(Config.sqlConnect);
         }
 
-        public void getNewWords()
+        public List<TuVungTableDto> getNewWords()
         {
-            //bool ret = false;
-            //int index = 0;
+            List<TuVungTableDto> newWords = new List<TuVungTableDto>();
             int id;
             List<int> oldWordsId = new List<int>();
 
-            //// đọc id từ đã học
+            // đọc id từ đã học
             string[] oldWordsIdString;
             if (File.Exists(Config.oldWordFile))
             {
@@ -88,17 +80,8 @@ namespace study_japanese.Models
                     newWords.Add(e);
                 }
             }
-        }
 
-        public void showNewWord(SettingInfoDto config)
-        {
-            int x = Screen.PrimaryScreen.WorkingArea.Width;
-            int y = Screen.PrimaryScreen.WorkingArea.Height;
-
-            ThreeLine form3 = new ThreeLine(config, newWords);
-            form3.StartPosition = FormStartPosition.Manual;
-            form3.Location = new Point(x - form3.Width, y - form3.Height);
-            form3.ShowDialog();
+            return newWords;
         }
     }
 }

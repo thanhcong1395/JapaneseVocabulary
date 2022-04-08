@@ -94,7 +94,7 @@
     <Compile Include="Models\Config.cs" />
     <Compile Include="Models\Dto\TuVungTableDto.cs" />
     <Compile Include="Models\Dto\SettingInfoDto.cs" />
-    <Compile Include="Models\Control.cs" />
+    <Compile Include="Models\Query.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -102,28 +102,37 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Views\Logo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\Logo.Designer.cs">
+      <DependentUpon>Logo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Views\NewWords.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Views\NewWords.Designer.cs">
+      <DependentUpon>NewWords.cs</DependentUpon>
+    </Compile>
     <Compile Include="Views\Setting.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Views\Setting.Designer.cs">
       <DependentUpon>Setting.cs</DependentUpon>
     </Compile>
-    <Compile Include="Views\ThreeLine.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Views\ThreeLine.Designer.cs">
-      <DependentUpon>ThreeLine.cs</DependentUpon>
-    </Compile>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <SubType>Designer</SubType>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\Logo.resx">
+      <DependentUpon>Logo.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Views\NewWords.resx">
+      <DependentUpon>NewWords.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\Setting.resx">
       <DependentUpon>Setting.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Views\ThreeLine.resx">
-      <DependentUpon>ThreeLine.cs</DependentUpon>
     </EmbeddedResource>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
