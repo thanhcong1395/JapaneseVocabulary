@@ -169,9 +169,7 @@ namespace study_japanese.Views
             this.Controls.Add(this.yes);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "NewWords";
-            this.Text = "NewWords";
-            this.Load += new System.EventHandler(this.loadEvent);
-            this.Shown += new System.EventHandler(this.showEvent);
+            this.Text = "Wiki Japan";
             this.ResumeLayout(false);
 
         }

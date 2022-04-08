@@ -506,23 +506,5 @@ namespace study_japanese.Views
             this.Close();
             Application.Exit();
         }
-
-        private void showEvent(object sender, EventArgs e)
-        {
-            if(this.settingMode.exitApp)
-            {
-                this.Close();
-                Application.Exit();
-            }
-        }
-
-        private void loadEvent(object sender, EventArgs e)
-        {
-            if (this.settingMode.exitApp)
-            {
-                this.Close();
-                Application.Exit();
-            }
-        }
     }
 }
