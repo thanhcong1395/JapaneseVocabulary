@@ -170,6 +170,7 @@ namespace study_japanese.Views
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Name = "NewWords";
             this.Text = "Wiki Japan";
+            this.TopMost = true;
             this.ResumeLayout(false);
 
         }
