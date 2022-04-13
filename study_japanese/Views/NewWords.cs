@@ -16,39 +16,64 @@ namespace study_japanese.Views
     public partial class NewWords : Form
     {
         private List<TuVungTableDto> newWords = new List<TuVungTableDto>();
+        private TuVungTableDto nextWord = new TuVungTableDto();
+        private TuVungTableDto currentWord = new TuVungTableDto();
         private Logo golo =  new Logo();
         private Setting settingMode = new Setting();
         private SettingInfoDto config = new SettingInfoDto();
         private bool firstShow;
-        private TuVungTableDto currentWord = new TuVungTableDto();
         private Random random = new Random();
+        private int index = -1;
+        private bool front = true;
 
         public NewWords()
         {
             InitializeComponent();
             this.WindowLocation();
             this.showLogo();
-            this.getNewWord();
+            this.getNewWordFromServer();
             this.config = this.settingMode.getConfig();
             this.timer2.Interval = this.config.speed * 1000;
             this.timer2.Start();
             this.firstShow = true;
-            this.getRandomWord();
-            this.showWord();
+            _event();
         }
 
-        private void getRandomWord()
+        private bool getRandomWord(bool rd)
         {
-            int index = random.Next(newWords.Count);
+            bool haveWord = true;
 
-            this.currentWord.Id = newWords[index].Id;
-            this.currentWord.Furigana = newWords[index].Furigana;
-            this.currentWord.HanTu = newWords[index].HanTu;
-            this.currentWord.Means = newWords[index].Means;
-            this.currentWord.Example = newWords[index].Example;
+            if(newWords.Count > 0)
+            {
+                this.effect(this.config.effect);
+                if (rd)
+                {
+                    this.index = random.Next(newWords.Count);
+                }
+                else
+                {
+                    this.index += 1;
+                    if (this.index >= newWords.Count)
+                    {
+                        this.index = 0;
+                    }
+                }
+
+                this.nextWord.Id = newWords[index].Id;
+                this.nextWord.Furigana = newWords[index].Furigana;
+                this.nextWord.HanTu = newWords[index].HanTu;
+                this.nextWord.Means = newWords[index].Means;
+                this.nextWord.Example = newWords[index].Example;
+            }
+            else
+            {
+                haveWord = false;
+            }
+
+            return haveWord;
         }
 
-        private void getNewWord()
+        private void getNewWordFromServer()
         {
             Query query = new Query();
             this.newWords = query.getNewWords();
@@ -89,18 +114,37 @@ namespace study_japanese.Views
             this.golo.ShowDialog();
         }
 
+        private void effect(bool ef)
+        {
+            if(ef)
+            {
+                this.front = !this.front;
+                this.BackColor = (this.front) ? Color.Silver : Color.LightGray;
+            }
+        }
+
         private void _event()
         {
+            bool haveWord = true;
+
             timer2.Interval = this.config.speed * 1000;
             if (this.firstShow == true)
             {
-                this.getRandomWord();
+                haveWord = this.getRandomWord(this.config.random);
             }
-            this.showWord();
+            if(haveWord)
+            {
+                this.showWord();
+            }
+            else
+            {
+                noneScreen();
+            }
         }
 
         public void showWord()
         {
+            
             switch (this.config.mode)
             {
                 case SettingInfoDto.enmMode.MOTMAT:
@@ -236,40 +280,51 @@ namespace study_japanese.Views
                     }
                     break;
             }
+            this.currentWord = this.nextWord;
         }
+
+        private void noneScreen()
+        {
+            label1.Text = string.Empty;
+            label2.Text = string.Empty;
+            label3.Text = "HẾT TỪ MỚI!!!!";
+            label4.Text = string.Empty;
+            label5.Text = string.Empty;
+        }
+
 
         private void screen1()
         {
-            label1.Text = this.currentWord.Furigana;
+            label1.Text = this.nextWord.Furigana;
             label2.Text = string.Empty;
-            label3.Text = this.currentWord.HanTu;
+            label3.Text = this.nextWord.HanTu;
             label4.Text = string.Empty;
-            label5.Text = this.currentWord.Means;
+            label5.Text = this.nextWord.Means;
         }
 
         private void screen2()
         {
             label1.Text = string.Empty;
-            label2.Text = this.currentWord.Furigana;
+            label2.Text = this.nextWord.Furigana;
             label3.Text = string.Empty;
-            label4.Text = this.currentWord.HanTu;
+            label4.Text = this.nextWord.HanTu;
             label5.Text = string.Empty;
         }
         private void screen3()
         {
             label1.Text = string.Empty;
-            label2.Text = this.currentWord.Furigana;
+            label2.Text = this.nextWord.Furigana;
             label3.Text = string.Empty;
-            label4.Text = this.currentWord.Means;
+            label4.Text = this.nextWord.Means;
             label5.Text = string.Empty;
         }
 
         private void screen4()
         {
             label1.Text = string.Empty;
-            label2.Text = this.currentWord.HanTu;
+            label2.Text = this.nextWord.HanTu;
             label3.Text = string.Empty;
-            label4.Text = this.currentWord.Means;
+            label4.Text = this.nextWord.Means;
             label5.Text = string.Empty;
         }
 
@@ -277,7 +332,7 @@ namespace study_japanese.Views
         {
             label1.Text = string.Empty;
             label2.Text = string.Empty;
-            label3.Text = this.currentWord.Furigana;
+            label3.Text = this.nextWord.Furigana;
             label4.Text = string.Empty;
             label5.Text = string.Empty;
         }
@@ -286,7 +341,7 @@ namespace study_japanese.Views
         {
             label1.Text = string.Empty;
             label2.Text = string.Empty;
-            label3.Text = this.currentWord.HanTu;
+            label3.Text = this.nextWord.HanTu;
             label4.Text = string.Empty;
             label5.Text = string.Empty;
         }
@@ -295,7 +350,7 @@ namespace study_japanese.Views
         {
             label1.Text = string.Empty;
             label2.Text = string.Empty;
-            label3.Text = this.currentWord.Means;
+            label3.Text = this.nextWord.Means;
             label4.Text = string.Empty;
             label5.Text = string.Empty;
         }
@@ -304,7 +359,7 @@ namespace study_japanese.Views
         {
             label1.Text = string.Empty;
             label2.Text = string.Empty;
-            label3.Text = this.currentWord.Example;
+            label3.Text = this.nextWord.Example;
             label4.Text = string.Empty;
             label5.Text = string.Empty;
         }
@@ -404,9 +459,9 @@ namespace study_japanese.Views
         {
             {
                 label1.Text = string.Empty;
-                label2.Text = this.currentWord.Means;
+                label2.Text = this.nextWord.Means;
                 label3.Text = string.Empty;
-                label4.Text = this.currentWord.Example;
+                label4.Text = this.nextWord.Example;
                 label5.Text = string.Empty;
             }
         }
@@ -480,6 +535,7 @@ namespace study_japanese.Views
         private void timer1_Tick(object sender, EventArgs e)
         {
             this.golo.Close();
+            this.timer1.Stop();
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -489,10 +545,12 @@ namespace study_japanese.Views
 
         private void yes_Click(object sender, EventArgs e)
         {
+
             string[] id = new string[1];
-            id[0] = currentWord.Id.ToString();
-            this._event();
+            this.newWords.RemoveAt(this.currentWord.Id);
+            id[0] = this.currentWord.Id.ToString();
             File.AppendAllLines(Config.oldWordFile, id);
+            this._event();
         }
 
         private void no_Click(object sender, EventArgs e)

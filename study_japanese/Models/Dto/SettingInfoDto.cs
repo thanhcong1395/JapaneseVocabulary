@@ -13,11 +13,16 @@ namespace study_japanese.Models.Dto
             MOTMAT,
             HAIMAT
         }
+
         public bool furigana { get; set; }
         public bool means { get; set; }
         public bool hanTu { get; set; }
         public bool example { get; set; }
         public enmMode mode { get; set; }
         public int speed { get; set; }
+        public bool random { get; set; }
+        public bool startUp { get; set; }
+
+        public bool effect { get; set; }
     }
 }

@@ -26,6 +26,9 @@ namespace study_japanese.Views
             setConfig.example = false;
             setConfig.mode = SettingInfoDto.enmMode.MOTMAT;
             setConfig.speed = 3;
+            setConfig.random = true;
+            setConfig.effect = true;
+            setConfig.startUp = true;
             InitializeComponent();
             this.textBox1.Text = "5";
         }
@@ -74,13 +77,21 @@ namespace study_japanese.Views
         private void ok_Click(object sender, EventArgs e)
         {
             this.Hide();
+            startup(setConfig.startUp);
             setConfig.speed = Convert.ToInt32(this.textBox1.Text);
         }
 
-        private void startup()
+        private void startup(bool startup)
         {
             RegistryKey reg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
-            reg.SetValue("Wiki Japan", Application.ExecutablePath.ToString());
+            if(startup)
+            {
+                reg.SetValue("Wiki Japan", Application.ExecutablePath.ToString());
+            }
+            else
+            {
+                reg.DeleteValue("Wiki Japan");
+            }    
         }
 
         private void Speed_KeyPress(object sender, KeyPressEventArgs e)
@@ -112,6 +123,26 @@ namespace study_japanese.Views
         public SettingInfoDto getConfig()
         {
             return this.setConfig;
+        }
+
+        private void random_CheckedChanged(object sender, EventArgs e)
+        {
+            setConfig.random = true;
+        }
+
+        private void tuanTu_CheckedChanged(object sender, EventArgs e)
+        {
+            setConfig.random = false;
+        }
+
+        private void effect_CheckedChanged(object sender, EventArgs e)
+        {
+            setConfig.effect = effect.Checked;
+        }
+
+        private void startUp_CheckedChanged(object sender, EventArgs e)
+        {
+            setConfig.startUp = start_up.Checked;
         }
     }
 }
