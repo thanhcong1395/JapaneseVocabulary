@@ -42,8 +42,6 @@ namespace study_japanese.Views
             this.mode2Mat = new System.Windows.Forms.RadioButton();
             this.link = new System.Windows.Forms.Label();
             this.label5 = new System.Windows.Forms.Label();
-            this.ok = new System.Windows.Forms.Button();
-            this.exit = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -53,9 +51,13 @@ namespace study_japanese.Views
             this.panel3 = new System.Windows.Forms.Panel();
             this.radioButton3 = new System.Windows.Forms.RadioButton();
             this.radioButton4 = new System.Windows.Forms.RadioButton();
+            this.exit = new System.Windows.Forms.PictureBox();
+            this.ok = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.exit)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ok)).BeginInit();
             this.SuspendLayout();
             // 
             // pictureBox1
@@ -124,7 +126,7 @@ namespace study_japanese.Views
             this.nghia.CheckState = System.Windows.Forms.CheckState.Checked;
             this.nghia.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.nghia.ForeColor = System.Drawing.Color.White;
-            this.nghia.Location = new System.Drawing.Point(294, 130);
+            this.nghia.Location = new System.Drawing.Point(303, 130);
             this.nghia.Name = "nghia";
             this.nghia.Size = new System.Drawing.Size(82, 26);
             this.nghia.TabIndex = 5;
@@ -150,7 +152,7 @@ namespace study_japanese.Views
             this.viDu.AutoSize = true;
             this.viDu.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.viDu.ForeColor = System.Drawing.Color.White;
-            this.viDu.Location = new System.Drawing.Point(294, 162);
+            this.viDu.Location = new System.Drawing.Point(303, 162);
             this.viDu.Name = "viDu";
             this.viDu.Size = new System.Drawing.Size(76, 26);
             this.viDu.TabIndex = 7;
@@ -178,7 +180,7 @@ namespace study_japanese.Views
             this.mode2Mat.AutoSize = true;
             this.mode2Mat.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.mode2Mat.ForeColor = System.Drawing.Color.White;
-            this.mode2Mat.Location = new System.Drawing.Point(142, 6);
+            this.mode2Mat.Location = new System.Drawing.Point(151, 6);
             this.mode2Mat.Name = "mode2Mat";
             this.mode2Mat.Size = new System.Drawing.Size(78, 26);
             this.mode2Mat.TabIndex = 9;
@@ -192,11 +194,11 @@ namespace study_japanese.Views
             this.link.BackColor = System.Drawing.Color.Gray;
             this.link.Cursor = System.Windows.Forms.Cursors.Hand;
             this.link.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.link.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.link.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.link.ForeColor = System.Drawing.Color.White;
             this.link.Location = new System.Drawing.Point(364, 401);
             this.link.Name = "link";
-            this.link.Size = new System.Drawing.Size(88, 16);
+            this.link.Size = new System.Drawing.Size(99, 16);
             this.link.TabIndex = 10;
             this.link.Text = "link trang web";
             this.link.Click += new System.EventHandler(this.link_Click);
@@ -208,37 +210,13 @@ namespace study_japanese.Views
             this.label5.ForeColor = System.Drawing.Color.White;
             this.label5.Location = new System.Drawing.Point(260, 293);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(55, 22);
+            this.label5.Size = new System.Drawing.Size(93, 22);
             this.label5.TabIndex = 11;
-            this.label5.Text = "thẻ/s";
-            // 
-            // ok
-            // 
-            this.ok.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.ok.ForeColor = System.Drawing.Color.Gray;
-            this.ok.Image = ((System.Drawing.Image)(resources.GetObject("ok.Image")));
-            this.ok.Location = new System.Drawing.Point(414, 127);
-            this.ok.Name = "ok";
-            this.ok.Size = new System.Drawing.Size(35, 35);
-            this.ok.TabIndex = 12;
-            this.ok.UseVisualStyleBackColor = true;
-            this.ok.Click += new System.EventHandler(this.ok_Click);
-            // 
-            // exit
-            // 
-            this.exit.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.exit.ForeColor = System.Drawing.Color.Gray;
-            this.exit.Image = ((System.Drawing.Image)(resources.GetObject("exit.Image")));
-            this.exit.Location = new System.Drawing.Point(414, 177);
-            this.exit.Name = "exit";
-            this.exit.Size = new System.Drawing.Size(35, 35);
-            this.exit.TabIndex = 13;
-            this.exit.UseVisualStyleBackColor = true;
-            this.exit.Click += new System.EventHandler(this.exit_Click);
+            this.label5.Text = "giây / thẻ";
             // 
             // textBox1
             // 
-            this.textBox1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox1.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.textBox1.Location = new System.Drawing.Point(162, 290);
             this.textBox1.MaxLength = 3;
             this.textBox1.Name = "textBox1";
@@ -326,10 +304,10 @@ namespace study_japanese.Views
             this.radioButton3.ForeColor = System.Drawing.Color.White;
             this.radioButton3.Location = new System.Drawing.Point(12, 6);
             this.radioButton3.Name = "radioButton3";
-            this.radioButton3.Size = new System.Drawing.Size(105, 26);
+            this.radioButton3.Size = new System.Drawing.Size(133, 26);
             this.radioButton3.TabIndex = 8;
             this.radioButton3.TabStop = true;
-            this.radioButton3.Text = "Random";
+            this.radioButton3.Text = "Ngẫu nhiên";
             this.radioButton3.UseVisualStyleBackColor = true;
             this.radioButton3.CheckedChanged += new System.EventHandler(this.random_CheckedChanged);
             // 
@@ -338,7 +316,7 @@ namespace study_japanese.Views
             this.radioButton4.AutoSize = true;
             this.radioButton4.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.radioButton4.ForeColor = System.Drawing.Color.White;
-            this.radioButton4.Location = new System.Drawing.Point(142, 6);
+            this.radioButton4.Location = new System.Drawing.Point(151, 6);
             this.radioButton4.Name = "radioButton4";
             this.radioButton4.Size = new System.Drawing.Size(100, 26);
             this.radioButton4.TabIndex = 9;
@@ -346,12 +324,39 @@ namespace study_japanese.Views
             this.radioButton4.UseVisualStyleBackColor = true;
             this.radioButton4.CheckedChanged += new System.EventHandler(this.tuanTu_CheckedChanged);
             // 
+            // exit
+            // 
+            this.exit.Image = ((System.Drawing.Image)(resources.GetObject("exit.Image")));
+            this.exit.Location = new System.Drawing.Point(422, 167);
+            this.exit.Name = "exit";
+            this.exit.Size = new System.Drawing.Size(30, 30);
+            this.exit.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.exit.TabIndex = 45;
+            this.exit.TabStop = false;
+            this.exit.Click += new System.EventHandler(this.exit_Click);
+            this.exit.MouseLeave += new System.EventHandler(this.exit_leave);
+            this.exit.MouseMove += new System.Windows.Forms.MouseEventHandler(this.exit_move);
+            // 
+            // ok
+            // 
+            this.ok.Image = ((System.Drawing.Image)(resources.GetObject("ok.Image")));
+            this.ok.Location = new System.Drawing.Point(422, 131);
+            this.ok.Name = "ok";
+            this.ok.Size = new System.Drawing.Size(30, 30);
+            this.ok.TabIndex = 44;
+            this.ok.TabStop = false;
+            this.ok.Click += new System.EventHandler(this.ok_Click);
+            this.ok.MouseLeave += new System.EventHandler(this.ok_leave);
+            this.ok.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ok_move);
+            // 
             // Setting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
             this.ClientSize = new System.Drawing.Size(464, 426);
+            this.Controls.Add(this.exit);
+            this.Controls.Add(this.ok);
             this.Controls.Add(this.panel3);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.effect);
@@ -359,8 +364,6 @@ namespace study_japanese.Views
             this.Controls.Add(this.label6);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.textBox1);
-            this.Controls.Add(this.exit);
-            this.Controls.Add(this.ok);
             this.Controls.Add(this.label5);
             this.Controls.Add(this.link);
             this.Controls.Add(this.viDu);
@@ -382,6 +385,8 @@ namespace study_japanese.Views
             this.panel1.PerformLayout();
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.exit)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.ok)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -401,8 +406,6 @@ namespace study_japanese.Views
         private System.Windows.Forms.RadioButton mode2Mat;
         private System.Windows.Forms.Label link;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.Button ok;
-        private System.Windows.Forms.Button exit;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Label label6;
@@ -412,5 +415,7 @@ namespace study_japanese.Views
         private System.Windows.Forms.Panel panel3;
         private System.Windows.Forms.RadioButton radioButton3;
         private System.Windows.Forms.RadioButton radioButton4;
+        private System.Windows.Forms.PictureBox exit;
+        private System.Windows.Forms.PictureBox ok;
     }
 }

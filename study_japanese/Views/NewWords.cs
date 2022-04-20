@@ -6,6 +6,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using study_japanese.Models;
@@ -285,6 +286,14 @@ namespace study_japanese.Views
 
         private void noneScreen()
         {
+            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = Color.Red;
+            this.label1.Visible = false;
+            this.label2.Visible = false;
+            this.label3.Visible = true;
+            this.label4.Visible = false;
+            this.label5.Visible = false;
+
             label1.Text = string.Empty;
             label2.Text = string.Empty;
             label3.Text = "HẾT TỪ MỚI!!!!";
@@ -295,6 +304,18 @@ namespace study_japanese.Views
 
         private void screen1()
         {
+            this.label1.Font = new Font("UD Digi Kyokasho NK-R", 16F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 20F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = Color.Red;
+            this.label5.Font = new Font("UD Digi Kyokasho NK-R", 16F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label5.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label1.Visible = true;
+            this.label2.Visible = false;
+            this.label3.Visible = true;
+            this.label4.Visible = false;
+            this.label5.Visible = true;
+
             label1.Text = this.nextWord.Furigana;
             label2.Text = string.Empty;
             label3.Text = this.nextWord.HanTu;
@@ -304,6 +325,16 @@ namespace study_japanese.Views
 
         private void screen2()
         {
+            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label4.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = Color.Red;
+            this.label1.Visible = false;
+            this.label2.Visible = true;
+            this.label3.Visible = false;
+            this.label4.Visible = true;
+            this.label5.Visible = false;
+
             label1.Text = string.Empty;
             label2.Text = this.nextWord.Furigana;
             label3.Text = string.Empty;
@@ -312,6 +343,16 @@ namespace study_japanese.Views
         }
         private void screen3()
         {
+            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = Color.Red;
+            this.label4.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label1.Visible = false;
+            this.label2.Visible = true;
+            this.label3.Visible = false;
+            this.label4.Visible = true;
+            this.label5.Visible = false;
+
             label1.Text = string.Empty;
             label2.Text = this.nextWord.Furigana;
             label3.Text = string.Empty;
@@ -321,6 +362,16 @@ namespace study_japanese.Views
 
         private void screen4()
         {
+            this.label4.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = Color.Red;
+            this.label1.Visible = false;
+            this.label2.Visible = true;
+            this.label3.Visible = false;
+            this.label4.Visible = true;
+            this.label5.Visible = false;
+
             label1.Text = string.Empty;
             label2.Text = this.nextWord.HanTu;
             label3.Text = string.Empty;
@@ -330,6 +381,14 @@ namespace study_japanese.Views
 
         private void screen5()
         {
+            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = Color.Red;
+            this.label1.Visible = false;
+            this.label2.Visible = false;
+            this.label3.Visible = true;
+            this.label4.Visible = false;
+            this.label5.Visible = false;
+
             label1.Text = string.Empty;
             label2.Text = string.Empty;
             label3.Text = this.nextWord.Furigana;
@@ -339,6 +398,14 @@ namespace study_japanese.Views
 
         private void screen6()
         {
+            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = Color.Red;
+            this.label1.Visible = false;
+            this.label2.Visible = false;
+            this.label3.Visible = true;
+            this.label4.Visible = false;
+            this.label5.Visible = false;
+
             label1.Text = string.Empty;
             label2.Text = string.Empty;
             label3.Text = this.nextWord.HanTu;
@@ -348,6 +415,14 @@ namespace study_japanese.Views
 
         private void screen7()
         {
+            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = Color.Red;
+            this.label1.Visible = false;
+            this.label2.Visible = false;
+            this.label3.Visible = true;
+            this.label4.Visible = false;
+            this.label5.Visible = false;
+
             label1.Text = string.Empty;
             label2.Text = string.Empty;
             label3.Text = this.nextWord.Means;
@@ -357,6 +432,14 @@ namespace study_japanese.Views
 
         private void screenExample()
         {
+            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = Color.Red;
+            this.label1.Visible = false;
+            this.label2.Visible = false;
+            this.label3.Visible = true;
+            this.label4.Visible = false;
+            this.label5.Visible = false;
+
             label1.Text = string.Empty;
             label2.Text = string.Empty;
             label3.Text = this.nextWord.Example;
@@ -457,13 +540,21 @@ namespace study_japanese.Views
 
         private void screenMeansExample()
         {
-            {
-                label1.Text = string.Empty;
-                label2.Text = this.nextWord.Means;
-                label3.Text = string.Empty;
-                label4.Text = this.nextWord.Example;
-                label5.Text = string.Empty;
-            }
+            this.label4.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label4.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = Color.Red;
+            this.label1.Visible = false;
+            this.label2.Visible = true;
+            this.label3.Visible = false;
+            this.label4.Visible = true;
+            this.label5.Visible = false;
+
+            label1.Text = string.Empty;
+            label2.Text = this.nextWord.Means;
+            label3.Text = string.Empty;
+            label4.Text = this.nextWord.Example;
+            label5.Text = string.Empty;
         }
 
         private void screen15()
@@ -545,11 +636,13 @@ namespace study_japanese.Views
 
         private void yes_Click(object sender, EventArgs e)
         {
-
             string[] id = new string[1];
-            this.newWords.RemoveAt(this.currentWord.Id);
-            id[0] = this.currentWord.Id.ToString();
-            File.AppendAllLines(Config.oldWordFile, id);
+            if(this.newWords.Contains(this.currentWord))
+            {
+                this.newWords.RemoveAt(this.currentWord.Id);
+                id[0] = this.currentWord.Id.ToString();
+                File.AppendAllLines(Config.oldWordFile, id);
+            }
             this._event();
         }
 
@@ -563,6 +656,36 @@ namespace study_japanese.Views
             this.settingMode.Close();
             this.Close();
             Application.Exit();
+        }
+
+        private void yes_move(object sender, MouseEventArgs e)
+        {
+            this.yes.Image = Image.FromFile(@"..\\..\\Image\\icons8_Done_30px.png");
+        }
+
+        private void yes_leave(object sender, EventArgs e)
+        {
+            this.yes.Image = Image.FromFile(@"..\\..\\Image\\icons8_Done_30px_1.png");
+        }
+
+        private void no_move(object sender, MouseEventArgs e)
+        {
+            this.no.Image = Image.FromFile(@"..\\..\\Image\\icons8_multiply_35px.png");
+        }
+
+        private void no_leave(object sender, EventArgs e)
+        {
+            this.no.Image = Image.FromFile(@"..\\..\\Image\\icons8_multiply_35px_1.png");
+        }
+
+        private void setting_leave(object sender, EventArgs e)
+        {
+            this.setting.Image = Image.FromFile(@"..\\..\\Image\\icons8_settings_30px.png");
+        }
+
+        private void setting_move(object sender, MouseEventArgs e)
+        {
+            this.setting.Image = Image.FromFile(@"..\\..\\Image\\icons8_settings_30px_2.png");
         }
     }
 }

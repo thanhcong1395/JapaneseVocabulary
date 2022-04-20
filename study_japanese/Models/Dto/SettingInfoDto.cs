@@ -10,8 +10,8 @@ namespace study_japanese.Models.Dto
     {
         public enum enmMode
         {
-            MOTMAT,
-            HAIMAT
+            MOTMAT = 0,
+            HAIMAT = 1
         }
 
         public bool furigana { get; set; }
