@@ -244,7 +244,7 @@ namespace study_japanese.Views
 
         private void exit_move(object sender, MouseEventArgs e)
         {
-            this.exit.Image = Image.FromFile(@"..\\..\\Image\\icons8_multiply_35px.png");
+            this.exit.Image = Image.FromFile(@"..\\..\Image\\icons8_multiply_35px.png");
         }
 
     }

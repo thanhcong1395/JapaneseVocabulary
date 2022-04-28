@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.IO;
@@ -20,58 +19,40 @@ namespace study_japanese.Views
         private TuVungTableDto nextWord = new TuVungTableDto();
         private TuVungTableDto currentWord = new TuVungTableDto();
         private Logo golo =  new Logo();
-        private Setting settingMode = new Setting();
+        private Setting settingprintMode = new Setting();
         private SettingInfoDto config = new SettingInfoDto();
-        private bool firstShow;
         private Random random = new Random();
+        private enmPrintMode printMode;
         private int index = -1;
-        private bool front = true;
+        private int periodPerWord = 0;
+        private int periodPerWordCnt = 0;
+        private bool firstFace = true;
+
+
+        private enum enmPrintMode
+        {
+            NONE = 0,
+            F1_1L_F2_0L = 1,
+            F1_1L_F2_1L,
+            F1_2L_F2_0L,
+            F1_2L_F2_1L,
+            F1_2L_F2_2L,
+            F1_3L_F2_0L,
+            F1_3L_F2_1L,
+        }
+
 
         public NewWords()
         {
             InitializeComponent();
-            this.WindowLocation();
             this.showLogo();
+            this.WindowLocation();
             this.getNewWordFromServer();
-            this.config = this.settingMode.getConfig();
+            this.config = this.settingprintMode.getConfig();
             this.timer2.Interval = this.config.speed * 1000;
             this.timer2.Start();
-            this.firstShow = true;
+            this.selectPrintMode();
             _event();
-        }
-
-        private bool getRandomWord(bool rd)
-        {
-            bool haveWord = true;
-
-            if(newWords.Count > 0)
-            {
-                this.effect(this.config.effect);
-                if (rd)
-                {
-                    this.index = random.Next(newWords.Count);
-                }
-                else
-                {
-                    this.index += 1;
-                    if (this.index >= newWords.Count)
-                    {
-                        this.index = 0;
-                    }
-                }
-
-                this.nextWord.Id = newWords[index].Id;
-                this.nextWord.Furigana = newWords[index].Furigana;
-                this.nextWord.HanTu = newWords[index].HanTu;
-                this.nextWord.Means = newWords[index].Means;
-                this.nextWord.Example = newWords[index].Example;
-            }
-            else
-            {
-                haveWord = false;
-            }
-
-            return haveWord;
         }
 
         private void getNewWordFromServer()
@@ -89,25 +70,7 @@ namespace study_japanese.Views
             this.Location = new Point(x - this.Width, y - this.Height);
         }
 
-        private void setting_Click(object sender, EventArgs e)
-        {
-            this.timer2.Stop();
-            this.Hide();
-            this.settingMode.ShowDialog();
-            
-            if (this.settingMode.exitApp)
-            {
-                this.Close();
-                Application.Exit();
-            }
-            else
-            {
-                this.config = this.settingMode.getConfig();
-                this.timer2.Interval = this.config.speed * 1000;
-                this.timer2.Start();
-                this.Show();
-            }
-        }
+        
 
         private void showLogo()
         {
@@ -115,514 +78,378 @@ namespace study_japanese.Views
             this.golo.ShowDialog();
         }
 
-        private void effect(bool ef)
+        private void effect(bool show)
         {
-            if(ef)
+            if(this.config.effect)
             {
-                this.front = !this.front;
-                this.BackColor = (this.front) ? Color.Silver : Color.LightGray;
-            }
-        }
-
-        private void _event()
-        {
-            bool haveWord = true;
-
-            timer2.Interval = this.config.speed * 1000;
-            if (this.firstShow == true)
-            {
-                haveWord = this.getRandomWord(this.config.random);
-            }
-            if(haveWord)
-            {
-                this.showWord();
+                switch(show)
+                {
+                    case true:
+                        while (this.Opacity < 1)
+                        {
+                            this.Opacity += 0.02;
+                            Thread.Sleep(1);
+                        }
+                        break;
+                    case false:
+                        while (this.Opacity > 0)
+                        {
+                            this.Opacity -= 0.02;
+                            Thread.Sleep(1);
+                        }
+                        break;
+                }
             }
             else
             {
-                noneScreen();
+                this.Opacity = 1;
             }
         }
 
-        public void showWord()
+        private void selectPrintMode()
         {
-            
             switch (this.config.mode)
             {
                 case SettingInfoDto.enmMode.MOTMAT:
                     if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == false)
                     {
-                        this.screen1();
+                        this.printMode = enmPrintMode.F1_3L_F2_0L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == false)
                     {
-                        this.screen2();
+                        this.printMode = enmPrintMode.F1_2L_F2_0L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == false)
                     {
-                        this.screen3();
+                        this.printMode = enmPrintMode.F1_2L_F2_0L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == false)
                     {
-                        this.screen4();
+                        this.printMode = enmPrintMode.F1_2L_F2_0L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == false)
                     {
-                        this.screen5();
+                        this.printMode = enmPrintMode.F1_1L_F2_0L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == false)
                     {
-                        this.screen6();
+                        this.printMode = enmPrintMode.F1_1L_F2_0L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == false)
                     {
-                        this.screen7();
+                        this.printMode = enmPrintMode.F1_1L_F2_0L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == true)
                     {
-                        this.screen8();
+                        this.printMode = enmPrintMode.F1_3L_F2_1L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == true)
                     {
-                        this.screen9();
+                        this.printMode = enmPrintMode.F1_2L_F2_1L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == true)
                     {
-                        this.screen10();
+                        this.printMode = enmPrintMode.F1_2L_F2_1L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == true)
                     {
-                        this.screen11();
+                        this.printMode = enmPrintMode.F1_2L_F2_1L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == true)
                     {
-                        this.screen12();
+                        this.printMode = enmPrintMode.F1_2L_F2_0L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == true)
                     {
-                        this.screen13();
+                        this.printMode = enmPrintMode.F1_2L_F2_0L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == true)
                     {
-                        this.screen14();
-                    }
-                    else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == false && this.config.example == false)
-                    {
-                        this.screen1();
+                        this.printMode = enmPrintMode.F1_2L_F2_0L;
                     }
                     else
                     {
-                        this.screen1();
+                        this.printMode = enmPrintMode.NONE;
                     }
                     break;
                 case SettingInfoDto.enmMode.HAIMAT:
                     if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == false)
                     {
-                        this.screen15();
+                        this.printMode = enmPrintMode.F1_2L_F2_1L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == false)
                     {
-                        this.screen16();
+                        this.printMode = enmPrintMode.F1_1L_F2_1L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == false)
                     {
-                        this.screen17();
+                        this.printMode = enmPrintMode.F1_1L_F2_1L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == false)
                     {
-                        this.screen18();
+                        this.printMode = enmPrintMode.F1_1L_F2_1L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == false)
                     {
-                        this.screen5();
+                        this.printMode = enmPrintMode.F1_1L_F2_0L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == false)
                     {
-                        this.screen6();
+                        this.printMode = enmPrintMode.F1_1L_F2_0L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == false)
                     {
-                        this.screen7();
+                        this.printMode = enmPrintMode.F1_1L_F2_0L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == true)
                     {
-                        this.screen19();
+                        this.printMode = enmPrintMode.F1_2L_F2_2L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == true)
                     {
-                        this.screen9();
+                        this.printMode = enmPrintMode.F1_2L_F2_1L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == true)
                     {
-                        this.screen10();
+                        this.printMode = enmPrintMode.F1_2L_F2_1L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == true)
                     {
-                        this.screen11();
+                        this.printMode = enmPrintMode.F1_2L_F2_1L;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == true)
                     {
-                        this.screen12();
+                        this.printMode = enmPrintMode.F1_1L_F2_1L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == true)
                     {
-                        this.screen13();
+                        this.printMode = enmPrintMode.F1_1L_F2_1L;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == true)
                     {
-                        this.screen14();
-                    }
-                    else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == false && this.config.example == false)
-                    {
-                        this.screen1();
+                        this.printMode = enmPrintMode.F1_1L_F2_1L;
                     }
                     else
                     {
-                        this.screen1();
+                        this.printMode = enmPrintMode.NONE;
                     }
                     break;
+            }
+
+            switch (this.printMode)
+            {
+                case enmPrintMode.NONE:
+                case enmPrintMode.F1_1L_F2_0L:
+                case enmPrintMode.F1_2L_F2_0L:
+                case enmPrintMode.F1_3L_F2_0L:
+                    this.periodPerWord = 1;
+                    break;
+                default:
+                    this.periodPerWord = 2;
+                    break;
+            }
+            this.periodPerWordCnt = this.periodPerWord;
+        }
+
+        private bool getWord(bool rd)
+        {
+            bool haveWord = true;
+
+            if (newWords.Count > 0)
+            {
+                if (rd)
+                {
+                    this.index = random.Next(newWords.Count);
+                }
+                else
+                {
+                    if (++this.index == this.newWords.Count)
+                    {
+                        this.index = 0;
+                    }
+                }
+                this.nextWord.Id = newWords[this.index].Id;
+                this.nextWord.Furigana = newWords[this.index].Furigana;
+                this.nextWord.HanTu = newWords[this.index].HanTu;
+                this.nextWord.Means = newWords[this.index].Means;
+                this.nextWord.Example = newWords[this.index].Example;
+            }
+            else
+            {
+                haveWord = false;
+            }
+
+            return haveWord;
+        }
+
+        public void showWord()
+        {
+            switch (this.printMode)
+            {
+                case enmPrintMode.NONE:
+                    this.noneScreen();
+                    break;
+                case enmPrintMode.F1_1L_F2_0L:
+                    string word = String.Empty;
+                    if(this.config.furigana)
+                    {
+                        word = this.nextWord.Furigana;
+                    }
+                    else if(this.config.hanTu)
+                    {
+                        word = this.nextWord.HanTu;
+                    }
+                    else if(this.config.means)
+                    {
+                        word = this.nextWord.Means;
+                    }
+                    else if(this.config.example)
+                    {
+                        word = this.nextWord.Example;
+                    }
+                    this.oneLineScreen(word);
+                    break;
+                case enmPrintMode.F1_2L_F2_0L:
+                    if(this.config.furigana && this.config.hanTu)
+                    {
+                        this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, new Point(6, 65), new Point(6, 30));
+                    }
+                    else if(this.config.furigana && this.config.means)
+                    {
+                        this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Means, new Point(6, 30), new Point(6, 65));
+                    }
+                    else if(this.config.furigana && this.config.example)
+                    {
+                        this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Example, new Point(6, 30), new Point(6, 65));
+                    }
+                    else if(this.config.hanTu && this.config.means)
+                    {
+                        this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, new Point(6, 30), new Point(6, 65));
+                    }
+                    else if(this.config.hanTu && this.config.example)
+                    {
+                        this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Example, new Point(6, 30), new Point(6, 65));
+                    }
+                    else
+                    {
+                        this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, new Point(6, 30), new Point(6, 65));
+                    }
+                    break;
+                case enmPrintMode.F1_3L_F2_0L:
+                    threeLinesScreen(this.nextWord.HanTu, this.nextWord.Furigana, this.nextWord.Means);
+                    break;
+                case enmPrintMode.F1_1L_F2_1L:
+
+                    break;
+
             }
             this.currentWord = this.nextWord;
         }
 
+        private void _event()
+        {
+            if (this.getWord(this.config.random))
+            {
+                this.showWord();
+            }
+            else
+            {
+                this.NoWordScreen();
+            }
+        }
+
+        /* screen */
         private void noneScreen()
         {
-            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = Color.Red;
-            this.label1.Visible = false;
-            this.label2.Visible = false;
-            this.label3.Visible = true;
-            this.label4.Visible = false;
-            this.label5.Visible = false;
-
-            label1.Text = string.Empty;
-            label2.Text = string.Empty;
-            label3.Text = "HẾT TỪ MỚI!!!!";
-            label4.Text = string.Empty;
-            label5.Text = string.Empty;
+            this.label1.Text = string.Empty;
+            this.label2.Text = string.Empty;
+            this.label3.Text = string.Empty;
         }
-
-
-        private void screen1()
+        private void NoWordScreen()
         {
-            this.label1.Font = new Font("UD Digi Kyokasho NK-R", 16F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 20F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = Color.Red;
-            this.label5.Font = new Font("UD Digi Kyokasho NK-R", 16F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label5.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label1.Visible = true;
-            this.label2.Visible = false;
-            this.label3.Visible = true;
-            this.label4.Visible = false;
-            this.label5.Visible = true;
+            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = Color.Red;
+            this.label1.Visible = false;
+            this.label2.Visible = true;
+            this.label3.Visible = false;
 
-            label1.Text = this.nextWord.Furigana;
-            label2.Text = string.Empty;
-            label3.Text = this.nextWord.HanTu;
-            label4.Text = string.Empty;
-            label5.Text = this.nextWord.Means;
+            this.label1.Text = string.Empty;
+            this.label2.Text = "HẾT TỪ MỚI!!!!";
+            this.label3.Text = string.Empty;
         }
 
-        private void screen2()
+        private void oneLineScreen(string word)
+        {
+            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = Color.Red;
+            this.label2.Location = new Point(6, 42);
+            this.label1.Visible = false;
+            this.label2.Visible = true;
+            this.label3.Visible = false;
+
+            this.label1.Text = string.Empty;
+            this.label2.Text = word;
+            this.label3.Text = string.Empty;
+        }
+
+        private void twoLinesScreen(string line1, string line2, Point location1, Point location2)
         {
             this.label2.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label4.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = Color.Red;
-            this.label1.Visible = false;
+            this.label2.Location = location1;
+            this.label1.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = Color.Red;
+            this.label1.Location = location2;
+            this.label1.Visible = true;
             this.label2.Visible = true;
             this.label3.Visible = false;
-            this.label4.Visible = true;
-            this.label5.Visible = false;
 
-            label1.Text = string.Empty;
-            label2.Text = this.nextWord.Furigana;
-            label3.Text = string.Empty;
-            label4.Text = this.nextWord.HanTu;
-            label5.Text = string.Empty;
+            this.label1.Text = line1;
+            this.label2.Text = line2;
+            this.label3.Text = string.Empty;
         }
-        private void screen3()
+
+        private void threeLinesScreen(string line1, string line2, string line3)
         {
+            this.label1.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label1.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label1.Location = new Point(6, 9);
             this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = Color.Red;
-            this.label4.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label1.Visible = false;
+            this.label1.Location = new Point(6, 42);
+            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label3.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label3.Location = new Point(6, 79);
+            this.label1.Visible = true;
             this.label2.Visible = true;
-            this.label3.Visible = false;
-            this.label4.Visible = true;
-            this.label5.Visible = false;
-
-            label1.Text = string.Empty;
-            label2.Text = this.nextWord.Furigana;
-            label3.Text = string.Empty;
-            label4.Text = this.nextWord.Means;
-            label5.Text = string.Empty;
-        }
-
-        private void screen4()
-        {
-            this.label4.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = Color.Red;
-            this.label1.Visible = false;
-            this.label2.Visible = true;
-            this.label3.Visible = false;
-            this.label4.Visible = true;
-            this.label5.Visible = false;
-
-            label1.Text = string.Empty;
-            label2.Text = this.nextWord.HanTu;
-            label3.Text = string.Empty;
-            label4.Text = this.nextWord.Means;
-            label5.Text = string.Empty;
-        }
-
-        private void screen5()
-        {
-            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = Color.Red;
-            this.label1.Visible = false;
-            this.label2.Visible = false;
             this.label3.Visible = true;
-            this.label4.Visible = false;
-            this.label5.Visible = false;
 
-            label1.Text = string.Empty;
-            label2.Text = string.Empty;
-            label3.Text = this.nextWord.Furigana;
-            label4.Text = string.Empty;
-            label5.Text = string.Empty;
+            this.label1.Text = line1;
+            this.label2.Text = line2;
+            this.label3.Text = line3;
         }
 
-        private void screen6()
+        /* event */
+        private void setting_Click(object sender, EventArgs e)
         {
-            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = Color.Red;
-            this.label1.Visible = false;
-            this.label2.Visible = false;
-            this.label3.Visible = true;
-            this.label4.Visible = false;
-            this.label5.Visible = false;
+            this.timer2.Stop();
+            this.Hide();
+            this.settingprintMode.ShowDialog();
 
-            label1.Text = string.Empty;
-            label2.Text = string.Empty;
-            label3.Text = this.nextWord.HanTu;
-            label4.Text = string.Empty;
-            label5.Text = string.Empty;
-        }
-
-        private void screen7()
-        {
-            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = Color.Red;
-            this.label1.Visible = false;
-            this.label2.Visible = false;
-            this.label3.Visible = true;
-            this.label4.Visible = false;
-            this.label5.Visible = false;
-
-            label1.Text = string.Empty;
-            label2.Text = string.Empty;
-            label3.Text = this.nextWord.Means;
-            label4.Text = string.Empty;
-            label5.Text = string.Empty;
-        }
-
-        private void screenExample()
-        {
-            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = Color.Red;
-            this.label1.Visible = false;
-            this.label2.Visible = false;
-            this.label3.Visible = true;
-            this.label4.Visible = false;
-            this.label5.Visible = false;
-
-            label1.Text = string.Empty;
-            label2.Text = string.Empty;
-            label3.Text = this.nextWord.Example;
-            label4.Text = string.Empty;
-            label5.Text = string.Empty;
-        }
-
-        private void screen8()
-        {
-            if (this.firstShow)
+            if (this.settingprintMode.exitApp)
             {
-                screen1();
+                this.Close();
+                Application.Exit();
             }
             else
             {
-                screenExample();
+                this.config = this.settingprintMode.getConfig();
+                this.timer2.Interval = this.config.speed * 1000;
+                this.timer2.Start();
+                this.Show();
             }
-            this.firstShow = !this.firstShow;
         }
 
-        private void screen9()
-        {
-            if (this.firstShow)
-            {
-                screen2();
-            }
-            else
-            {
-                screenExample();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        private void screen10()
-        {
-            if (this.firstShow)
-            {
-                screen3();
-            }
-            else
-            {
-                screenExample();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        private void screen11()
-        {
-            if (this.firstShow)
-            {
-                screen4();
-            }
-            else
-            {
-                screenExample();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        private void screen12()
-        {
-            if (this.firstShow)
-            {
-                screen5();
-            }
-            else
-            {
-                screenExample();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        private void screen13()
-        {
-            if (this.firstShow)
-            {
-                screen6();
-            }
-            else
-            {
-                screenExample();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        private void screen14()
-        {
-            if (this.firstShow)
-            {
-                screen7();
-            }
-            else
-            {
-                screenExample();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        private void screenMeansExample()
-        {
-            this.label4.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label4.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = Color.Red;
-            this.label1.Visible = false;
-            this.label2.Visible = true;
-            this.label3.Visible = false;
-            this.label4.Visible = true;
-            this.label5.Visible = false;
-
-            label1.Text = string.Empty;
-            label2.Text = this.nextWord.Means;
-            label3.Text = string.Empty;
-            label4.Text = this.nextWord.Example;
-            label5.Text = string.Empty;
-        }
-
-        private void screen15()
-        {
-            if (this.firstShow)
-            {
-                screen2();
-            }
-            else
-            {
-                screen7();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        private void screen16()
-        {
-            if (this.firstShow)
-            {
-                screen6();
-            }
-            else
-            {
-                screen5();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        private void screen17()
-        {
-            if (this.firstShow)
-            {
-                screen5();
-            }
-            else
-            {
-                screen7();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        private void screen18()
-        {
-            if (this.firstShow)
-            {
-                screen6();
-            }
-            else
-            {
-                screen7();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        private void screen19()
-        {
-            if (this.firstShow)
-            {
-                screen2();
-            }
-            else
-            {
-                screenMeansExample();
-            }
-            this.firstShow = !this.firstShow;
-        }
-
-        // event
         private void timer1_Tick(object sender, EventArgs e)
         {
             this.golo.Close();
@@ -631,7 +458,7 @@ namespace study_japanese.Views
 
         private void timer2_Tick(object sender, EventArgs e)
         {
-           this._event();
+            this._event();
         }
 
         private void yes_Click(object sender, EventArgs e)
@@ -653,7 +480,7 @@ namespace study_japanese.Views
 
         private void back_Click(object sender, EventArgs e)
         {
-            this.settingMode.Close();
+            this.settingprintMode.Close();
             this.Close();
             Application.Exit();
         }
@@ -686,6 +513,21 @@ namespace study_japanese.Views
         private void setting_move(object sender, MouseEventArgs e)
         {
             this.setting.Image = Image.FromFile(@"..\\..\\Image\\icons8_settings_30px_2.png");
+        }
+
+        private void label2_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label4_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label3_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }

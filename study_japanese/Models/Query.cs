@@ -31,7 +31,7 @@ namespace study_japanese.Models
                 {
                     // Get data
                     // Define a query
-                    NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM Tu_vung ORDER BY id ASC", conn);
+                    NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM kotoba_notify ORDER BY id ASC", conn);
                     NpgsqlDataReader dr = command.ExecuteReader();
                     // Output rows
                     while (dr.Read())
@@ -39,7 +39,7 @@ namespace study_japanese.Models
                         TuVungTableDto tmp = new TuVungTableDto();
                         tmp.Furigana = dr["furigana"].ToString();
                         tmp.HanTu = dr["hanTu"].ToString();
-                        tmp.Means = dr["means"].ToString();
+                        tmp.Means = dr["mean"].ToString();
                         tmp.Example = dr["example"].ToString();
                         tmp.Id = Convert.ToInt32(dr["id"]);
                         allWords.Add(tmp);
