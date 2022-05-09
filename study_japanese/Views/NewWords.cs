@@ -15,32 +15,20 @@ namespace study_japanese.Views
 {
     public partial class NewWords : Form
     {
+        private readonly Point lineOne = new Point(6, 20);
+        private readonly Point lineTwo = new Point(6, 70);
+        private readonly Size large = new Size(300, 40);
+        private readonly Size medium = new Size(300, 30);
+
         private List<TuVungTableDto> newWords = new List<TuVungTableDto>();
         private TuVungTableDto nextWord = new TuVungTableDto();
         private TuVungTableDto currentWord = new TuVungTableDto();
-        private Logo golo =  new Logo();
+        private Logo logo =  new Logo();
         private Setting settingprintMode = new Setting();
         private SettingInfoDto config = new SettingInfoDto();
         private Random random = new Random();
-        private enmPrintMode printMode;
         private int index = -1;
-        private int periodPerWord = 0;
-        private int periodPerWordCnt = 0;
         private bool firstFace = true;
-
-
-        private enum enmPrintMode
-        {
-            NONE = 0,
-            F1_1L_F2_0L = 1,
-            F1_1L_F2_1L,
-            F1_2L_F2_0L,
-            F1_2L_F2_1L,
-            F1_2L_F2_2L,
-            F1_3L_F2_0L,
-            F1_3L_F2_1L,
-        }
-
 
         public NewWords()
         {
@@ -51,7 +39,6 @@ namespace study_japanese.Views
             this.config = this.settingprintMode.getConfig();
             this.timer2.Interval = this.config.speed * 1000;
             this.timer2.Start();
-            this.selectPrintMode();
             _event();
         }
 
@@ -75,7 +62,7 @@ namespace study_japanese.Views
         private void showLogo()
         {
             this.Hide();
-            this.golo.ShowDialog();
+            this.logo.ShowDialog();
         }
 
         private void effect(bool show)
@@ -106,156 +93,319 @@ namespace study_japanese.Views
             }
         }
 
-        private void selectPrintMode()
+        private void showWord()
         {
             switch (this.config.mode)
             {
                 case SettingInfoDto.enmMode.MOTMAT:
                     if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_3L_F2_0L;
+                        // 1st face three lines, no 2nd face
+                        this.threeLinesScreen(this.nextWord.HanTu, this.nextWord.Furigana, this.nextWord.Means);
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Means, this.lineOne, this.lineTwo);
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.oneLineScreen(this.nextWord.Furigana);
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.oneLineScreen(this.nextWord.HanTu);
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.oneLineScreen(this.nextWord.Means);
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_3L_F2_1L;
+                        // 1st face three lines, 2nd face one line
+                        if (this.firstFace)
+                        {
+                            this.threeLinesScreen(this.nextWord.HanTu, this.nextWord.Furigana, this.nextWord.Means);
+                        }
+                        else
+                        {
+                            this.exampleScreen(this.nextWord.Example);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_1L;
+                        // 1st face 2 lines, 2nd face 1 line
+                        if (this.firstFace)
+                        {
+                            this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
+                        }
+                        else
+                        {
+                            this.exampleScreen(this.nextWord.Example);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_1L;
+                        // 1st face 2 lines, 2nd face 1 line
+                        if (this.firstFace)
+                        {
+                            this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Means, this.lineOne, this.lineTwo);
+                        }
+                        else
+                        {
+                            this.exampleScreen(this.nextWord.Example);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_1L;
+                        // 1st face 2 lines, 2nd face 1 line
+                        if (this.firstFace)
+                        {
+                            this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
+                        }
+                        else
+                        {
+                            this.exampleScreen(this.nextWord.Example);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Example, this.lineOne, this.lineTwo);
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
+                        return;
                     }
                     else
                     {
-                        this.printMode = enmPrintMode.NONE;
+                        this.noneScreen();
                     }
                     break;
                 case SettingInfoDto.enmMode.HAIMAT:
                     if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_1L;
+                        // 1st face 2 lines, 2nd face 1 line
+                        if (this.firstFace)
+                        {
+                            this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
+                        }
+                        else
+                        {
+                            this.oneLineScreen(this.nextWord.Means);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_1L;
+                        // 1st face 1 lines, 2nd face 1 line
+                        if (this.firstFace)
+                        {
+                            this.oneLineScreen(this.nextWord.Furigana);
+                        }
+                        else
+                        {
+                            this.oneLineScreen(this.nextWord.HanTu);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_1L;
+                        // 1st face 1 lines, 2nd face 1 line
+                        if (this.firstFace)
+                        {
+                            this.oneLineScreen(this.nextWord.Furigana);
+                        }
+                        else
+                        {
+                            this.oneLineScreen(this.nextWord.Means);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_1L;
+                        // 1st face 1 lines, 2nd face 1 line
+                        if (this.firstFace)
+                        {
+                            this.oneLineScreen(this.nextWord.HanTu);
+                        }
+                        else
+                        {
+                            this.oneLineScreen(this.nextWord.Means);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.oneLineScreen(this.nextWord.Furigana);
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.oneLineScreen(this.nextWord.HanTu);
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == false)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_0L;
+                        // 1st face two lines, no 2nd face
+                        this.oneLineScreen(this.nextWord.Means);
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_2L;
+                        // 1st face 2 lines, 2nd face 2 line
+                        if (this.firstFace)
+                        {
+                            this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
+                        }
+                        else
+                        {
+                            this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, this.lineOne, this.lineTwo);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_1L;
+                        // 1st face 2 lines, 2nd face 1 line
+                        if (this.firstFace)
+                        {
+                            this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
+                        }
+                        else
+                        {
+                            this.exampleScreen(this.nextWord.Example);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_1L;
+                        // 1st face 1 lines, 2nd face 2 line
+                        if (this.firstFace)
+                        {
+                            this.oneLineScreen(this.nextWord.Furigana);
+                        }
+                        else
+                        {
+                            this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, this.lineOne, this.lineTwo);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_2L_F2_1L;
+                        // 1st face 1 lines, 2nd face 2 line
+                        if (this.firstFace)
+                        {
+                            this.oneLineScreen(this.nextWord.HanTu);
+                        }
+                        else
+                        {
+                            this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, this.lineOne, this.lineTwo);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_1L;
+                        // 1st face 1 lines, 2nd face 1 line
+                        if (this.firstFace)
+                        {
+                            this.oneLineScreen(this.nextWord.Furigana);
+                            this.firstFace = false;
+                        }
+                        else
+                        {
+                            this.exampleScreen(this.nextWord.Example);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_1L;
+                        // 1st face 1 lines, 2nd face 2 line
+                        if (this.firstFace)
+                        {
+                            this.oneLineScreen(this.nextWord.HanTu);
+                        }
+                        else
+                        {
+                            this.exampleScreen(this.nextWord.Example);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == true)
                     {
-                        this.printMode = enmPrintMode.F1_1L_F2_1L;
+                        // 1st face 1 lines, 2nd face 2 line
+                        if (this.firstFace)
+                        {
+                            this.oneLineScreen(this.nextWord.Means);
+                        }
+                        else
+                        {
+                            this.exampleScreen(this.nextWord.Example);
+                        }
+                        this.firstFace = !this.firstFace;
+                        return;
                     }
                     else
                     {
-                        this.printMode = enmPrintMode.NONE;
+                        this.noneScreen();
                     }
                     break;
             }
-
-            switch (this.printMode)
-            {
-                case enmPrintMode.NONE:
-                case enmPrintMode.F1_1L_F2_0L:
-                case enmPrintMode.F1_2L_F2_0L:
-                case enmPrintMode.F1_3L_F2_0L:
-                    this.periodPerWord = 1;
-                    break;
-                default:
-                    this.periodPerWord = 2;
-                    break;
-            }
-            this.periodPerWordCnt = this.periodPerWord;
         }
 
         private bool getWord(bool rd)
         {
             bool haveWord = true;
 
-            if (newWords.Count > 0)
+            if (this.newWords.Count > 0)
             {
                 if (rd)
                 {
@@ -282,69 +432,6 @@ namespace study_japanese.Views
             return haveWord;
         }
 
-        public void showWord()
-        {
-            switch (this.printMode)
-            {
-                case enmPrintMode.NONE:
-                    this.noneScreen();
-                    break;
-                case enmPrintMode.F1_1L_F2_0L:
-                    string word = String.Empty;
-                    if(this.config.furigana)
-                    {
-                        word = this.nextWord.Furigana;
-                    }
-                    else if(this.config.hanTu)
-                    {
-                        word = this.nextWord.HanTu;
-                    }
-                    else if(this.config.means)
-                    {
-                        word = this.nextWord.Means;
-                    }
-                    else if(this.config.example)
-                    {
-                        word = this.nextWord.Example;
-                    }
-                    this.oneLineScreen(word);
-                    break;
-                case enmPrintMode.F1_2L_F2_0L:
-                    if(this.config.furigana && this.config.hanTu)
-                    {
-                        this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, new Point(6, 65), new Point(6, 30));
-                    }
-                    else if(this.config.furigana && this.config.means)
-                    {
-                        this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Means, new Point(6, 30), new Point(6, 65));
-                    }
-                    else if(this.config.furigana && this.config.example)
-                    {
-                        this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Example, new Point(6, 30), new Point(6, 65));
-                    }
-                    else if(this.config.hanTu && this.config.means)
-                    {
-                        this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, new Point(6, 30), new Point(6, 65));
-                    }
-                    else if(this.config.hanTu && this.config.example)
-                    {
-                        this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Example, new Point(6, 30), new Point(6, 65));
-                    }
-                    else
-                    {
-                        this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, new Point(6, 30), new Point(6, 65));
-                    }
-                    break;
-                case enmPrintMode.F1_3L_F2_0L:
-                    threeLinesScreen(this.nextWord.HanTu, this.nextWord.Furigana, this.nextWord.Means);
-                    break;
-                case enmPrintMode.F1_1L_F2_1L:
-
-                    break;
-
-            }
-            this.currentWord = this.nextWord;
-        }
 
         private void _event()
         {
@@ -369,6 +456,8 @@ namespace study_japanese.Views
         {
             this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = Color.Red;
+            this.label2.Location = new Point(6, 42);
+            this.label2.Size = this.large;
             this.label1.Visible = false;
             this.label2.Visible = true;
             this.label3.Visible = false;
@@ -378,10 +467,11 @@ namespace study_japanese.Views
             this.label3.Text = string.Empty;
         }
 
-        private void oneLineScreen(string word)
+        private void exampleScreen(string word)
         {
-            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = Color.Red;
+            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label2.Size = this.medium;
             this.label2.Location = new Point(6, 42);
             this.label1.Visible = false;
             this.label2.Visible = true;
@@ -392,20 +482,37 @@ namespace study_japanese.Views
             this.label3.Text = string.Empty;
         }
 
-        private void twoLinesScreen(string line1, string line2, Point location1, Point location2)
+        private void oneLineScreen(string word)
+        {
+            this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label2.ForeColor = Color.Red;
+            this.label2.Size = this.large;
+            this.label2.Location = new Point(6, 42);
+            this.label1.Visible = false;
+            this.label2.Visible = true;
+            this.label3.Visible = false;
+
+            this.label1.Text = string.Empty;
+            this.label2.Text = word;
+            this.label3.Text = string.Empty;
+        }
+
+        private void twoLinesScreen(string redLine, string BrownLine, Point location1, Point location2)
         {
             this.label2.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
-            this.label2.Location = location1;
+            this.label2.Location = location2;
+            this.label2.Size = this.medium;
             this.label1.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = Color.Red;
-            this.label1.Location = location2;
+            this.label1.Location = location1;
+            this.label1.Size = this.large;
             this.label1.Visible = true;
             this.label2.Visible = true;
             this.label3.Visible = false;
 
-            this.label1.Text = line1;
-            this.label2.Text = line2;
+            this.label1.Text = redLine;
+            this.label2.Text = BrownLine;
             this.label3.Text = string.Empty;
         }
 
@@ -414,16 +521,18 @@ namespace study_japanese.Views
             this.label1.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             this.label1.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label1.Location = new Point(6, 9);
+            this.label1.Size = this.medium;
             this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             this.label2.ForeColor = Color.Red;
-            this.label1.Location = new Point(6, 42);
-            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new Point(6, 42);
+            this.label2.Size = this.large;
+            this.label3.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
             this.label3.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
             this.label3.Location = new Point(6, 79);
+            this.label3.Size = this.medium;
             this.label1.Visible = true;
             this.label2.Visible = true;
             this.label3.Visible = true;
-
             this.label1.Text = line1;
             this.label2.Text = line2;
             this.label3.Text = line3;
@@ -446,13 +555,14 @@ namespace study_japanese.Views
                 this.config = this.settingprintMode.getConfig();
                 this.timer2.Interval = this.config.speed * 1000;
                 this.timer2.Start();
+                this._event();
                 this.Show();
             }
         }
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            this.golo.Close();
+            this.logo.Close();
             this.timer1.Stop();
         }
 
@@ -476,13 +586,6 @@ namespace study_japanese.Views
         private void no_Click(object sender, EventArgs e)
         {
             this._event();
-        }
-
-        private void back_Click(object sender, EventArgs e)
-        {
-            this.settingprintMode.Close();
-            this.Close();
-            Application.Exit();
         }
 
         private void yes_move(object sender, MouseEventArgs e)
@@ -515,19 +618,12 @@ namespace study_japanese.Views
             this.setting.Image = Image.FromFile(@"..\\..\\Image\\icons8_settings_30px_2.png");
         }
 
-        private void label2_Click(object sender, EventArgs e)
+        private void close_Click(object sender, EventArgs e)
         {
-
+            this.settingprintMode.Close();
+            this.Close();
+            Application.Exit();
         }
 
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label3_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

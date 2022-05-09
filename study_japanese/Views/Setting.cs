@@ -158,13 +158,11 @@ namespace study_japanese.Views
                 setConfig.means = (bool)data["means"];
                 setConfig.hanTu = (bool)data["hanTu"];
                 setConfig.example = (bool)data["example"];
-                setConfig.mode = ((int)data["hanTu"] == (int)SettingInfoDto.enmMode.MOTMAT) ? SettingInfoDto.enmMode.MOTMAT : SettingInfoDto.enmMode.HAIMAT;
+                setConfig.mode = ((int)data["mode"] == (int)SettingInfoDto.enmMode.MOTMAT) ? SettingInfoDto.enmMode.MOTMAT : SettingInfoDto.enmMode.HAIMAT;
                 setConfig.speed = (int)data["speed"];
                 setConfig.random = (bool)data["random"];
                 setConfig.effect = (bool)data["effect"];
                 setConfig.startUp = (bool)data["startUp"];
-
-                
             }
             else
             {

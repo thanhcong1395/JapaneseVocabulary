@@ -56,7 +56,6 @@ namespace study_japanese.Views
             this.label3.TabIndex = 39;
             this.label3.Text = "label3";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label3.Click += new System.EventHandler(this.label3_Click);
             // 
             // label2
             // 
@@ -67,7 +66,6 @@ namespace study_japanese.Views
             this.label2.TabIndex = 38;
             this.label2.Text = "label2";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.label2.Click += new System.EventHandler(this.label2_Click);
             // 
             // label1
             // 
@@ -146,6 +144,7 @@ namespace study_japanese.Views
             this.close.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.close.TabIndex = 45;
             this.close.TabStop = false;
+            this.close.Click += new System.EventHandler(this.close_Click);
             // 
             // NewWords
             // 
