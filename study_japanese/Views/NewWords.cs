@@ -42,6 +42,8 @@ namespace study_japanese.Views
         private bool playButtonFlag = true;
         private bool repeatButtonFlag = false;
         private bool checkedNewWord = false;
+        private int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
+        private int screenHeight = Screen.PrimaryScreen.WorkingArea.Height;
         public NewWords()
         {
             InitializeComponent();
@@ -108,11 +110,8 @@ namespace study_japanese.Views
 
         private void WindowLocation()
         {
-            int x = Screen.PrimaryScreen.WorkingArea.Width;
-            int y = Screen.PrimaryScreen.WorkingArea.Height;
-
             this.StartPosition = FormStartPosition.Manual;
-            this.Location = new Point(x - this.Width, y - this.Height);
+            this.Location = new Point(this.screenWidth - this.Width, this.screenHeight - this.Height);
         }
 
         private void showLogo()
@@ -688,13 +687,11 @@ namespace study_japanese.Views
             this.checkedNewWord = true;
             this.firstFace = true;
             this.timer2.Stop();
+            this.newWords.Remove(this.currentWord);
+            this.randomList.Remove(this.currentWord);
             string[] id = new string[1];
-            if(this.newWords.Contains(this.currentWord))
-            {
-                this.newWords.RemoveAt(this.currentWord.Id);
-                id[0] = this.currentWord.Id.ToString();
-                File.AppendAllLines(Config.oldWordFile, id);
-            }
+            id[0] = this.currentWord.Id.ToString();
+            File.AppendAllLines(Config.oldWordFile, id);
             this._event();
             this.timer2.Start();
             this.checkedNewWord = false;
@@ -814,24 +811,25 @@ namespace study_japanese.Views
             this.updateSpeed(this.config.speed);
         }
 
-        private void panel1_leave(object sender, EventArgs e)
+        private void NewWord_Load(object sender, EventArgs e)
         {
-            this.panel1.Visible = false;
+            
+            this.timer3.Interval = 100;
+            this.timer3.Start();
         }
 
-        private void panel1_move(object sender, MouseEventArgs e)
+        private void timer3_Tick(object sender, EventArgs e)
         {
-            this.panel1.Visible = true;
-        }
-
-        private void NewWords_leave(object sender, EventArgs e)
-        {
-            this.panel1.Visible = false;
-        }
-
-        private void NewWords_move(object sender, MouseEventArgs e)
-        {
-            this.panel1.Visible = true;
+            int cursorX = Cursor.Position.X;
+            int cursorY = Cursor.Position.Y;
+            if(((this.screenWidth - this.Width) <= cursorX) && ((this.screenHeight - this.Height) <= cursorY))
+            {
+                this.panel1.Visible = true;
+            }
+            else
+            {
+                this.panel1.Visible = false;
+            }
         }
     }
 }
