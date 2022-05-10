@@ -10,42 +10,100 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using study_japanese.Models;
 using study_japanese.Models.Dto;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace study_japanese.Views
 {
     public partial class NewWords : Form
     {
+        private enum enmGetNewWord
+        {
+            NO_GET = 1,
+            GOT = 2,
+            NO_WORD  = 3
+        }
+
         private readonly Point lineOne = new Point(6, 20);
         private readonly Point lineTwo = new Point(6, 70);
         private readonly Size large = new Size(300, 40);
         private readonly Size medium = new Size(300, 30);
 
         private List<TuVungTableDto> newWords = new List<TuVungTableDto>();
+        private List<TuVungTableDto> randomList = new List<TuVungTableDto>();
         private TuVungTableDto nextWord = new TuVungTableDto();
         private TuVungTableDto currentWord = new TuVungTableDto();
         private Logo logo =  new Logo();
         private Setting settingprintMode = new Setting();
         private SettingInfoDto config = new SettingInfoDto();
         private Random random = new Random();
-        private int index = -1;
+        private int index = 0;
         private bool firstFace = true;
-
+        private bool playButtonFlag = true;
+        private bool repeatButtonFlag = false;
+        private bool checkedNewWord = false;
         public NewWords()
         {
             InitializeComponent();
             this.showLogo();
             this.WindowLocation();
-            this.getNewWordFromServer();
+            this.getNewWordsFromServer();
             this.config = this.settingprintMode.getConfig();
             this.timer2.Interval = this.config.speed * 1000;
             this.timer2.Start();
             _event();
         }
 
-        private void getNewWordFromServer()
+        private void getNewWordsFromServer()
         {
+            string[] oldWordId;
+            List<int> oldWordIdList = new List<int>();
+            int result = 0;
+
+            List<TuVungTableDto> allNewWords = new List<TuVungTableDto>();
             Query query = new Query();
-            this.newWords = query.getNewWords();
+            allNewWords = query.getNewWords();
+            if(File.Exists(Config.oldWordFile))
+            {
+                oldWordId = File.ReadAllLines(Config.oldWordFile);
+                foreach (var e in oldWordId)
+                {
+                    if(Int32.TryParse(e, out result))
+                    {
+                        if(!oldWordIdList.Contains(result))
+                        {
+                            oldWordIdList.Append(result);
+                        }
+                    }
+                }
+                foreach (var e in allNewWords)
+                {
+                    if(!oldWordIdList.Contains(e.Id))
+                    {
+                        this.newWords.Add(e);
+                    }
+                }
+                
+            }
+            else
+            {
+                this.newWords = allNewWords;
+            }
+
+            // tao ramdom list tu moi
+            int i = 0;
+            int id = 0;
+            List<int> randId = new List<int>();
+            while(i < this.newWords.Count)
+            {
+                id = random.Next(this.newWords.Count);
+                if(!randId.Contains(id))
+                {
+                    randId.Add(id);
+                    this.randomList.Add(this.newWords[id]);
+                    ++i;
+                }
+            }
         }
 
         private void WindowLocation()
@@ -56,8 +114,6 @@ namespace study_japanese.Views
             this.StartPosition = FormStartPosition.Manual;
             this.Location = new Point(x - this.Width, y - this.Height);
         }
-
-        
 
         private void showLogo()
         {
@@ -401,47 +457,77 @@ namespace study_japanese.Views
             }
         }
 
-        private bool getWord(bool rd)
+        private enmGetNewWord getWord(bool rd)
         {
-            bool haveWord = true;
+            enmGetNewWord ret;
 
+            if (!this.firstFace)
+            {
+                ret = enmGetNewWord.NO_GET;
+                goto EXIT;
+            }
+            if(this.checkedNewWord)
+            {
+                goto GET_NEW_WORD;
+            }
+            if(this.repeatButtonFlag)
+            {
+                ret = enmGetNewWord.NO_GET;
+                goto EXIT;
+            }
+
+            GET_NEW_WORD:
             if (this.newWords.Count > 0)
             {
+                ++this.index;
+                if (this.index >= this.newWords.Count)
+                {
+                    this.index = 0;
+                }
+                else if (this.index < 0)
+                {
+                    this.index = this.newWords.Count - 1;
+                }
                 if (rd)
                 {
-                    this.index = random.Next(newWords.Count);
+                    this.nextWord.Id = this.randomList[this.index].Id;
+                    this.nextWord.Furigana = this.randomList[this.index].Furigana;
+                    this.nextWord.HanTu = this.randomList[this.index].HanTu;
+                    this.nextWord.Means = this.randomList[this.index].Means;
+                    this.nextWord.Example = this.randomList[this.index].Example;
                 }
                 else
                 {
-                    if (++this.index == this.newWords.Count)
-                    {
-                        this.index = 0;
-                    }
+                    this.nextWord.Id = this.newWords[this.index].Id;
+                    this.nextWord.Furigana = this.newWords[this.index].Furigana;
+                    this.nextWord.HanTu = this.newWords[this.index].HanTu;
+                    this.nextWord.Means = this.newWords[this.index].Means;
+                    this.nextWord.Example = this.newWords[this.index].Example;
                 }
-                this.nextWord.Id = newWords[this.index].Id;
-                this.nextWord.Furigana = newWords[this.index].Furigana;
-                this.nextWord.HanTu = newWords[this.index].HanTu;
-                this.nextWord.Means = newWords[this.index].Means;
-                this.nextWord.Example = newWords[this.index].Example;
+                ret = enmGetNewWord.GOT;
             }
             else
             {
-                haveWord = false;
+                ret = enmGetNewWord.NO_WORD;
             }
 
-            return haveWord;
+            EXIT:
+            return ret;
         }
-
 
         private void _event()
         {
-            if (this.getWord(this.config.random))
+            enmGetNewWord ret;
+
+            this.currentWord = this.nextWord;
+            ret = this.getWord(this.config.random);
+            if(ret == enmGetNewWord.NO_WORD)
             {
-                this.showWord();
+                this.NoWordScreen();
             }
             else
             {
-                this.NoWordScreen();
+                this.showWord();
             }
         }
 
@@ -538,6 +624,32 @@ namespace study_japanese.Views
             this.label3.Text = line3;
         }
 
+        private void updateSpeed(int speed)
+        {
+            SettingInfoDto update = new SettingInfoDto();
+
+            if (File.Exists(Config.settingFile))
+            {
+                JObject data = JObject.Parse(File.ReadAllText(Config.settingFile));
+                update.furigana = (bool)data["furigana"];
+                update.means = (bool)data["means"];
+                update.hanTu = (bool)data["hanTu"];
+                update.example = (bool)data["example"];
+                update.mode = ((int)data["mode"] == (int)SettingInfoDto.enmMode.MOTMAT) ? SettingInfoDto.enmMode.MOTMAT : SettingInfoDto.enmMode.HAIMAT;
+                update.speed = (int)data["speed"];
+                update.random = (bool)data["random"];
+                update.effect = (bool)data["effect"];
+                update.startUp = (bool)data["startUp"];
+
+                update.speed = speed;
+                string JsonResult = JsonConvert.SerializeObject(update);
+                byte[] vs = Encoding.UTF8.GetBytes(JsonResult);
+                FileStream fs = new FileStream(Config.settingFile, FileMode.Create);
+                fs.Write(vs, 0, JsonResult.Length);
+                fs.Close();
+            }
+        }
+
         /* event */
         private void setting_Click(object sender, EventArgs e)
         {
@@ -573,6 +685,9 @@ namespace study_japanese.Views
 
         private void yes_Click(object sender, EventArgs e)
         {
+            this.checkedNewWord = true;
+            this.firstFace = true;
+            this.timer2.Stop();
             string[] id = new string[1];
             if(this.newWords.Contains(this.currentWord))
             {
@@ -581,11 +696,18 @@ namespace study_japanese.Views
                 File.AppendAllLines(Config.oldWordFile, id);
             }
             this._event();
+            this.timer2.Start();
+            this.checkedNewWord = false;
         }
 
         private void no_Click(object sender, EventArgs e)
         {
+            this.checkedNewWord = true;
+            this.firstFace = true;
+            this.timer2.Stop();
             this._event();
+            this.timer2.Start();
+            this.checkedNewWord = false;
         }
 
         private void yes_move(object sender, MouseEventArgs e)
@@ -625,5 +747,91 @@ namespace study_japanese.Views
             Application.Exit();
         }
 
+        private void play_Click(object sender, EventArgs e)
+        {
+            this.playButtonFlag = !this.playButtonFlag;
+            if (!this.playButtonFlag)
+            {
+                this.play.Image = Image.FromFile(@"..\\..\\Image\\icons8_play_30px.png");
+                this.timer2.Stop();
+            }
+            else
+            {
+                this.play.Image = Image.FromFile(@"..\\..\\Image\\icons8_pause_30px.png");
+                this.timer2.Start();
+            }
+        }
+
+        private void previous_Click(object sender, EventArgs e)
+        {
+            this.checkedNewWord = true;
+            this.firstFace = true;
+            this.timer2.Stop();
+            this.index -= 2;
+            this._event();
+            this.timer2.Start();
+        }
+
+        private void next_Click(object sender, EventArgs e)
+        {
+            this.checkedNewWord = true;
+            this.firstFace = true;
+            this.timer2.Stop();
+            this._event();
+            this.timer2.Start();
+        }
+
+        private void repeat_Click(object sender, EventArgs e)
+        {
+            this.repeatButtonFlag = !this.repeatButtonFlag;
+            if (this.repeatButtonFlag)
+            {
+                this.repeat.Image = Image.FromFile(@"..\\..\\Image\\icons8_shuffle_20px.png");
+            }
+            else
+            {
+                this.repeat.Image = Image.FromFile(@"..\\..\\Image\\icons8_rotate_20px.png");
+            }
+        }
+
+        private void upSpeed_Click(object sender, EventArgs e)
+        {
+            if (++this.config.speed > 900)
+            {
+                this.config.speed = 900;
+            }
+            this.timer2.Interval = this.config.speed*1000;
+            this.updateSpeed(this.config.speed);
+        }
+
+        private void DownSpeed_Click(object sender, EventArgs e)
+        {
+            if (--this.config.speed <= 0)
+            {
+                this.config.speed = 1;
+            }
+            this.timer2.Interval = this.config.speed * 1000;
+            this.updateSpeed(this.config.speed);
+        }
+
+        private void panel1_leave(object sender, EventArgs e)
+        {
+            this.panel1.Visible = false;
+        }
+
+        private void panel1_move(object sender, MouseEventArgs e)
+        {
+            this.panel1.Visible = true;
+        }
+
+        private void NewWords_leave(object sender, EventArgs e)
+        {
+            this.panel1.Visible = false;
+        }
+
+        private void NewWords_move(object sender, MouseEventArgs e)
+        {
+            this.panel1.Visible = true;
+        }
     }
 }

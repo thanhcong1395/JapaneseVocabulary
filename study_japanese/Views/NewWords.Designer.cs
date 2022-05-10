@@ -41,10 +41,24 @@ namespace study_japanese.Views
             this.no = new System.Windows.Forms.PictureBox();
             this.setting = new System.Windows.Forms.PictureBox();
             this.close = new System.Windows.Forms.PictureBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.downSpeed = new System.Windows.Forms.PictureBox();
+            this.upSpeed = new System.Windows.Forms.PictureBox();
+            this.repeat = new System.Windows.Forms.PictureBox();
+            this.next = new System.Windows.Forms.PictureBox();
+            this.previous = new System.Windows.Forms.PictureBox();
+            this.play = new System.Windows.Forms.PictureBox();
             ((System.ComponentModel.ISupportInitialize)(this.yes)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.no)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.setting)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.close)).BeginInit();
+            this.panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.downSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.upSpeed)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repeat)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.next)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.previous)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.play)).BeginInit();
             this.SuspendLayout();
             // 
             // label3
@@ -80,7 +94,7 @@ namespace study_japanese.Views
             // timer1
             // 
             this.timer1.Enabled = true;
-            this.timer1.Interval = 2000;
+            this.timer1.Interval = 1000;
             this.timer1.Tick += new System.EventHandler(this.timer1_Tick);
             // 
             // timer2
@@ -89,12 +103,9 @@ namespace study_japanese.Views
             // 
             // imageList1
             // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.ColorDepth = System.Windows.Forms.ColorDepth.Depth8Bit;
+            this.imageList1.ImageSize = new System.Drawing.Size(16, 16);
             this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "icons8_Done_30px.png");
-            this.imageList1.Images.SetKeyName(1, "icons8_Done_30px_1.png");
-            this.imageList1.Images.SetKeyName(2, "icons8_multiply_35px.png");
-            this.imageList1.Images.SetKeyName(3, "icons8_multiply_35px_1.png");
             // 
             // yes
             // 
@@ -146,12 +157,96 @@ namespace study_japanese.Views
             this.close.TabStop = false;
             this.close.Click += new System.EventHandler(this.close_Click);
             // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.Transparent;
+            this.panel1.Controls.Add(this.downSpeed);
+            this.panel1.Controls.Add(this.upSpeed);
+            this.panel1.Controls.Add(this.repeat);
+            this.panel1.Controls.Add(this.next);
+            this.panel1.Controls.Add(this.previous);
+            this.panel1.Controls.Add(this.play);
+            this.panel1.Location = new System.Drawing.Point(5, 90);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(305, 30);
+            this.panel1.TabIndex = 46;
+            this.panel1.Visible = false;
+            this.panel1.MouseLeave += new System.EventHandler(this.panel1_leave);
+            this.panel1.MouseMove += new System.Windows.Forms.MouseEventHandler(this.panel1_move);
+            // 
+            // downSpeed
+            // 
+            this.downSpeed.Image = ((System.Drawing.Image)(resources.GetObject("downSpeed.Image")));
+            this.downSpeed.Location = new System.Drawing.Point(217, 3);
+            this.downSpeed.Name = "downSpeed";
+            this.downSpeed.Size = new System.Drawing.Size(25, 25);
+            this.downSpeed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.downSpeed.TabIndex = 52;
+            this.downSpeed.TabStop = false;
+            this.downSpeed.Click += new System.EventHandler(this.DownSpeed_Click);
+            // 
+            // upSpeed
+            // 
+            this.upSpeed.Image = ((System.Drawing.Image)(resources.GetObject("upSpeed.Image")));
+            this.upSpeed.Location = new System.Drawing.Point(186, 3);
+            this.upSpeed.Name = "upSpeed";
+            this.upSpeed.Size = new System.Drawing.Size(25, 25);
+            this.upSpeed.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.upSpeed.TabIndex = 51;
+            this.upSpeed.TabStop = false;
+            this.upSpeed.Click += new System.EventHandler(this.upSpeed_Click);
+            // 
+            // repeat
+            // 
+            this.repeat.Image = ((System.Drawing.Image)(resources.GetObject("repeat.Image")));
+            this.repeat.Location = new System.Drawing.Point(155, 3);
+            this.repeat.Name = "repeat";
+            this.repeat.Size = new System.Drawing.Size(25, 25);
+            this.repeat.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.repeat.TabIndex = 50;
+            this.repeat.TabStop = false;
+            this.repeat.Click += new System.EventHandler(this.repeat_Click);
+            // 
+            // next
+            // 
+            this.next.Image = ((System.Drawing.Image)(resources.GetObject("next.Image")));
+            this.next.Location = new System.Drawing.Point(124, 3);
+            this.next.Name = "next";
+            this.next.Size = new System.Drawing.Size(25, 25);
+            this.next.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.next.TabIndex = 49;
+            this.next.TabStop = false;
+            this.next.Click += new System.EventHandler(this.next_Click);
+            // 
+            // previous
+            // 
+            this.previous.Image = ((System.Drawing.Image)(resources.GetObject("previous.Image")));
+            this.previous.Location = new System.Drawing.Point(93, 3);
+            this.previous.Name = "previous";
+            this.previous.Size = new System.Drawing.Size(25, 25);
+            this.previous.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.previous.TabIndex = 48;
+            this.previous.TabStop = false;
+            this.previous.Click += new System.EventHandler(this.previous_Click);
+            // 
+            // play
+            // 
+            this.play.Image = ((System.Drawing.Image)(resources.GetObject("play.Image")));
+            this.play.Location = new System.Drawing.Point(62, 3);
+            this.play.Name = "play";
+            this.play.Size = new System.Drawing.Size(25, 25);
+            this.play.SizeMode = System.Windows.Forms.PictureBoxSizeMode.StretchImage;
+            this.play.TabIndex = 47;
+            this.play.TabStop = false;
+            this.play.Click += new System.EventHandler(this.play_Click);
+            // 
             // NewWords
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Silver;
             this.ClientSize = new System.Drawing.Size(340, 120);
+            this.Controls.Add(this.panel1);
             this.Controls.Add(this.close);
             this.Controls.Add(this.setting);
             this.Controls.Add(this.no);
@@ -163,10 +258,19 @@ namespace study_japanese.Views
             this.Name = "NewWords";
             this.Text = "Wiki Japan";
             this.TopMost = true;
+            this.MouseLeave += new System.EventHandler(this.NewWords_leave);
+            this.MouseMove += new System.Windows.Forms.MouseEventHandler(this.NewWords_move);
             ((System.ComponentModel.ISupportInitialize)(this.yes)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.no)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.setting)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.close)).EndInit();
+            this.panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.downSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.upSpeed)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.repeat)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.next)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.previous)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.play)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -182,5 +286,12 @@ namespace study_japanese.Views
         private System.Windows.Forms.PictureBox no;
         private System.Windows.Forms.PictureBox setting;
         private System.Windows.Forms.PictureBox close;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.PictureBox downSpeed;
+        private System.Windows.Forms.PictureBox upSpeed;
+        private System.Windows.Forms.PictureBox repeat;
+        private System.Windows.Forms.PictureBox next;
+        private System.Windows.Forms.PictureBox previous;
+        private System.Windows.Forms.PictureBox play;
     }
 }
