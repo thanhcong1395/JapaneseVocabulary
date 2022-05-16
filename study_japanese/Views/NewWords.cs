@@ -36,7 +36,7 @@ namespace study_japanese.Views
         private TuVungTableDto nextWord = new TuVungTableDto();
         private TuVungTableDto currentWord = new TuVungTableDto();
         private Logo logo;
-        private Setting settingScreen;
+        private Setting settingScreen = new Setting();
         private Random random = new Random();
         private int index = 0;
         private FlagDto flag = new FlagDto();
@@ -45,17 +45,30 @@ namespace study_japanese.Views
         public NewWords()
         {
             InitializeComponent();
-            this.showLogo();
-            this.WindowLocation();
-            this.GetNewWordsFromServer();
-            Set.ReadSettingFile();
-            this.flag.FirstFace = true;
-            this.flag.PlayButton = true;
-            this.flag.RepeatButton = false;
-            this.flag.CheckedNewWord = false;
-            this.timer2.Interval = Set.settingConfig.Speed * 1000;
-            this.timer2.Start();
+            Task t2 = this.Init();
+            this.ShowLogo();
+            Task.WaitAll(t2);
             _event();
+            this.timer2.Start();
+        }
+
+        private async Task Init()
+        {
+            Task t3 = new Task(
+                () =>
+                {
+                    this.WindowLocation();
+                    this.GetNewWordsFromServer();
+                    Set.ReadSettingFile();
+                    this.flag.FirstFace = true;
+                    this.flag.PlayButton = true;
+                    this.flag.RepeatButton = false;
+                    this.flag.CheckedNewWord = false;
+                    this.timer2.Interval = Set.settingConfig.Speed * 1000;
+                }
+            );
+            t3.Start();
+            await t3;
         }
 
         private void GetNewWordsFromServer()
@@ -118,7 +131,7 @@ namespace study_japanese.Views
             this.Location = new Point(this.screenWidth - this.Width, this.screenHeight - this.Height);
         }
 
-        private void showLogo()
+        private void ShowLogo()
         {
             this.Hide();
             this.logo = new Logo();
@@ -659,8 +672,8 @@ namespace study_japanese.Views
         {
             this.timer2.Stop();
             this.Hide();
-            this.settingScreen = new Setting();
-            this.settingScreen.ShowDialog();
+            //this.settingScreen = new Setting();
+            this.settingScreen.Show();
 
             if (this.settingScreen.exitApp)
             {
@@ -686,7 +699,8 @@ namespace study_japanese.Views
         private void timer1_Tick(object sender, EventArgs e)
         {
             this.timer1.Stop();
-            this.logo.Close();
+            //this.logo.Close();
+            this.logo.Dispose();
         }
 
         private void timer2_Tick(object sender, EventArgs e)

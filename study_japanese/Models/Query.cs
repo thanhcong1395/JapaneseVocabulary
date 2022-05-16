@@ -26,7 +26,7 @@ namespace study_japanese.Models
                 {
                     // Get data
                     // Define a query
-                    NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM kotoba_notify ORDER BY id ASC", conn);
+                    NpgsqlCommand command = new NpgsqlCommand("SELECT * FROM " + Config.tableDb +  " ORDER BY id ASC", conn);
                     NpgsqlDataReader dr = command.ExecuteReader();
                     // Output rows
                     while (dr.Read())
