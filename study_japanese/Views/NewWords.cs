@@ -28,20 +28,18 @@ namespace study_japanese.Views
         private readonly Point lineTwo = new Point(6, 70);
         private readonly Size large = new Size(300, 40);
         private readonly Size medium = new Size(300, 30);
+        private readonly Color gray = Color.FromArgb(64, 64, 64);
+        private readonly Color red = Color.FromArgb(164, 52, 48);
 
         private List<TuVungTableDto> newWords = new List<TuVungTableDto>();
         private List<TuVungTableDto> randomList = new List<TuVungTableDto>();
         private TuVungTableDto nextWord = new TuVungTableDto();
         private TuVungTableDto currentWord = new TuVungTableDto();
-        private Logo logo =  new Logo();
-        private Setting settingprintMode = new Setting();
-        private SettingInfoDto config = new SettingInfoDto();
+        private Logo logo;
+        private Setting settingScreen;
         private Random random = new Random();
         private int index = 0;
-        private bool firstFace = true;
-        private bool playButtonFlag = true;
-        private bool repeatButtonFlag = false;
-        private bool checkedNewWord = false;
+        private FlagDto flag = new FlagDto();
         private int screenWidth = Screen.PrimaryScreen.WorkingArea.Width;
         private int screenHeight = Screen.PrimaryScreen.WorkingArea.Height;
         public NewWords()
@@ -49,22 +47,24 @@ namespace study_japanese.Views
             InitializeComponent();
             this.showLogo();
             this.WindowLocation();
-            this.getNewWordsFromServer();
-            this.config = this.settingprintMode.getConfig();
-            this.timer2.Interval = this.config.speed * 1000;
+            this.GetNewWordsFromServer();
+            Set.ReadSettingFile();
+            this.flag.FirstFace = true;
+            this.flag.PlayButton = true;
+            this.flag.RepeatButton = false;
+            this.flag.CheckedNewWord = false;
+            this.timer2.Interval = Set.settingConfig.Speed * 1000;
             this.timer2.Start();
             _event();
         }
 
-        private void getNewWordsFromServer()
+        private void GetNewWordsFromServer()
         {
             string[] oldWordId;
             List<int> oldWordIdList = new List<int>();
             int result = 0;
 
-            List<TuVungTableDto> allNewWords = new List<TuVungTableDto>();
-            Query query = new Query();
-            allNewWords = query.getNewWords();
+            Query.QueryDB();
             if(File.Exists(Config.oldWordFile))
             {
                 oldWordId = File.ReadAllLines(Config.oldWordFile);
@@ -78,7 +78,7 @@ namespace study_japanese.Views
                         }
                     }
                 }
-                foreach (var e in allNewWords)
+                foreach (var e in Query.allWords)
                 {
                     if(!oldWordIdList.Contains(e.Id))
                     {
@@ -89,8 +89,12 @@ namespace study_japanese.Views
             }
             else
             {
-                this.newWords = allNewWords;
+                foreach (var e in Query.allWords)
+                {
+                    this.newWords.Add(e);
+                }
             }
+            Query.RemoveAllWords();
 
             // tao ramdom list tu moi
             int i = 0;
@@ -117,12 +121,13 @@ namespace study_japanese.Views
         private void showLogo()
         {
             this.Hide();
+            this.logo = new Logo();
             this.logo.ShowDialog();
         }
 
         private void effect(bool show)
         {
-            if(this.config.effect)
+            if(Set.settingConfig.Effect)
             {
                 switch(show)
                 {
@@ -150,55 +155,55 @@ namespace study_japanese.Views
 
         private void showWord()
         {
-            switch (this.config.mode)
+            switch (Set.settingConfig.Mode)
             {
                 case SettingInfoDto.enmMode.MOTMAT:
-                    if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == false)
+                    if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face three lines, no 2nd face
                         this.threeLinesScreen(this.nextWord.HanTu, this.nextWord.Furigana, this.nextWord.Means);
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Means, this.lineOne, this.lineTwo);
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == false && Set.settingConfig.Means == false && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.Furigana);
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.HanTu);
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.Means);
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
                     {
                         // 1st face three lines, 2nd face one line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.threeLinesScreen(this.nextWord.HanTu, this.nextWord.Furigana, this.nextWord.Means);
                         }
@@ -206,13 +211,13 @@ namespace study_japanese.Views
                         {
                             this.exampleScreen(this.nextWord.Example);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == true)
                     {
                         // 1st face 2 lines, 2nd face 1 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
                         }
@@ -220,13 +225,13 @@ namespace study_japanese.Views
                         {
                             this.exampleScreen(this.nextWord.Example);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
                     {
                         // 1st face 2 lines, 2nd face 1 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Means, this.lineOne, this.lineTwo);
                         }
@@ -234,13 +239,13 @@ namespace study_japanese.Views
                         {
                             this.exampleScreen(this.nextWord.Example);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
                     {
                         // 1st face 2 lines, 2nd face 1 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
                         }
@@ -248,22 +253,22 @@ namespace study_japanese.Views
                         {
                             this.exampleScreen(this.nextWord.Example);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == false && Set.settingConfig.Means == false && Set.settingConfig.Example == true)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Example, this.lineOne, this.lineTwo);
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == true)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
@@ -275,10 +280,10 @@ namespace study_japanese.Views
                     }
                     break;
                 case SettingInfoDto.enmMode.HAIMAT:
-                    if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == false)
+                    if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face 2 lines, 2nd face 1 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
                         }
@@ -286,13 +291,13 @@ namespace study_japanese.Views
                         {
                             this.oneLineScreen(this.nextWord.Means);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == false)
                     {
                         // 1st face 1 lines, 2nd face 1 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.oneLineScreen(this.nextWord.Furigana);
                         }
@@ -300,13 +305,13 @@ namespace study_japanese.Views
                         {
                             this.oneLineScreen(this.nextWord.HanTu);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face 1 lines, 2nd face 1 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.oneLineScreen(this.nextWord.Furigana);
                         }
@@ -314,13 +319,13 @@ namespace study_japanese.Views
                         {
                             this.oneLineScreen(this.nextWord.Means);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face 1 lines, 2nd face 1 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.oneLineScreen(this.nextWord.HanTu);
                         }
@@ -328,31 +333,31 @@ namespace study_japanese.Views
                         {
                             this.oneLineScreen(this.nextWord.Means);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == false && Set.settingConfig.Means == false && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.Furigana);
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.HanTu);
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == false)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.Means);
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == true && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
                     {
                         // 1st face 2 lines, 2nd face 2 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
                         }
@@ -360,13 +365,13 @@ namespace study_japanese.Views
                         {
                             this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, this.lineOne, this.lineTwo);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == true && this.config.means == false && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == true)
                     {
                         // 1st face 2 lines, 2nd face 1 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
                         }
@@ -374,13 +379,13 @@ namespace study_japanese.Views
                         {
                             this.exampleScreen(this.nextWord.Example);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == true && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
                     {
                         // 1st face 1 lines, 2nd face 2 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.oneLineScreen(this.nextWord.Furigana);
                         }
@@ -388,13 +393,13 @@ namespace study_japanese.Views
                         {
                             this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, this.lineOne, this.lineTwo);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == true && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
                     {
                         // 1st face 1 lines, 2nd face 2 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.oneLineScreen(this.nextWord.HanTu);
                         }
@@ -402,28 +407,28 @@ namespace study_japanese.Views
                         {
                             this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, this.lineOne, this.lineTwo);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == true && this.config.hanTu == false && this.config.means == false && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == false && Set.settingConfig.Means == false && Set.settingConfig.Example == true)
                     {
                         // 1st face 1 lines, 2nd face 1 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.oneLineScreen(this.nextWord.Furigana);
-                            this.firstFace = false;
+                            this.flag.FirstFace = false;
                         }
                         else
                         {
                             this.exampleScreen(this.nextWord.Example);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == true && this.config.means == false && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == true)
                     {
                         // 1st face 1 lines, 2nd face 2 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.oneLineScreen(this.nextWord.HanTu);
                         }
@@ -431,13 +436,13 @@ namespace study_japanese.Views
                         {
                             this.exampleScreen(this.nextWord.Example);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
-                    else if (this.config.furigana == false && this.config.hanTu == false && this.config.means == true && this.config.example == true)
+                    else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
                     {
                         // 1st face 1 lines, 2nd face 2 line
-                        if (this.firstFace)
+                        if (this.flag.FirstFace)
                         {
                             this.oneLineScreen(this.nextWord.Means);
                         }
@@ -445,7 +450,7 @@ namespace study_japanese.Views
                         {
                             this.exampleScreen(this.nextWord.Example);
                         }
-                        this.firstFace = !this.firstFace;
+                        this.flag.FirstFace = !this.flag.FirstFace;
                         return;
                     }
                     else
@@ -460,16 +465,16 @@ namespace study_japanese.Views
         {
             enmGetNewWord ret;
 
-            if (!this.firstFace)
+            if (!this.flag.FirstFace)
             {
                 ret = enmGetNewWord.NO_GET;
                 goto EXIT;
             }
-            if(this.checkedNewWord)
+            if(this.flag.CheckedNewWord)
             {
                 goto GET_NEW_WORD;
             }
-            if(this.repeatButtonFlag)
+            if(this.flag.RepeatButton)
             {
                 ret = enmGetNewWord.NO_GET;
                 goto EXIT;
@@ -519,7 +524,7 @@ namespace study_japanese.Views
             enmGetNewWord ret;
 
             this.currentWord = this.nextWord;
-            ret = this.getWord(this.config.random);
+            ret = this.getWord(Set.settingConfig.Random);
             if(ret == enmGetNewWord.NO_WORD)
             {
                 this.NoWordScreen();
@@ -540,7 +545,7 @@ namespace study_japanese.Views
         private void NoWordScreen()
         {
             this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = Color.Red;
+            this.label2.ForeColor = this.red;
             this.label2.Location = new Point(6, 42);
             this.label2.Size = this.large;
             this.label1.Visible = false;
@@ -555,7 +560,7 @@ namespace study_japanese.Views
         private void exampleScreen(string word)
         {
             this.label2.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label2.ForeColor = this.gray;
             this.label2.Size = this.medium;
             this.label2.Location = new Point(6, 42);
             this.label1.Visible = false;
@@ -570,7 +575,7 @@ namespace study_japanese.Views
         private void oneLineScreen(string word)
         {
             this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = Color.Red;
+            this.label2.ForeColor = this.red;
             this.label2.Size = this.large;
             this.label2.Location = new Point(6, 42);
             this.label1.Visible = false;
@@ -585,11 +590,11 @@ namespace study_japanese.Views
         private void twoLinesScreen(string redLine, string BrownLine, Point location1, Point location2)
         {
             this.label2.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label2.ForeColor = this.gray;
             this.label2.Location = location2;
             this.label2.Size = this.medium;
             this.label1.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = Color.Red;
+            this.label1.ForeColor = this.red;
             this.label1.Location = location1;
             this.label1.Size = this.large;
             this.label1.Visible = true;
@@ -604,15 +609,15 @@ namespace study_japanese.Views
         private void threeLinesScreen(string line1, string line2, string line3)
         {
             this.label1.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label1.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label1.ForeColor = this.gray;
             this.label1.Location = new Point(6, 9);
             this.label1.Size = this.medium;
             this.label2.Font = new Font("UD Digi Kyokasho NK-R", 24F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label2.ForeColor = Color.Red;
+            this.label2.ForeColor = this.red;
             this.label2.Location = new Point(6, 42);
             this.label2.Size = this.large;
             this.label3.Font = new Font("UD Digi Kyokasho NK-R", 18F, FontStyle.Bold, GraphicsUnit.Point, ((byte)(0)));
-            this.label3.ForeColor = Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(64)))), ((int)(((byte)(64)))));
+            this.label3.ForeColor = this.gray;
             this.label3.Location = new Point(6, 79);
             this.label3.Size = this.medium;
             this.label1.Visible = true;
@@ -630,17 +635,17 @@ namespace study_japanese.Views
             if (File.Exists(Config.settingFile))
             {
                 JObject data = JObject.Parse(File.ReadAllText(Config.settingFile));
-                update.furigana = (bool)data["furigana"];
-                update.means = (bool)data["means"];
-                update.hanTu = (bool)data["hanTu"];
-                update.example = (bool)data["example"];
-                update.mode = ((int)data["mode"] == (int)SettingInfoDto.enmMode.MOTMAT) ? SettingInfoDto.enmMode.MOTMAT : SettingInfoDto.enmMode.HAIMAT;
-                update.speed = (int)data["speed"];
-                update.random = (bool)data["random"];
-                update.effect = (bool)data["effect"];
-                update.startUp = (bool)data["startUp"];
+                update.Furigana = (bool)data["Furigana"];
+                update.Means = (bool)data["Means"];
+                update.HanTu = (bool)data["HanTu"];
+                update.Example = (bool)data["Example"];
+                update.Mode = ((int)data["Mode"] == (int)SettingInfoDto.enmMode.MOTMAT) ? SettingInfoDto.enmMode.MOTMAT : SettingInfoDto.enmMode.HAIMAT;
+                update.Speed = (int)data["Speed"];
+                update.Random = (bool)data["Random"];
+                update.Effect = (bool)data["Effect"];
+                update.StartUp = (bool)data["StartUp"];
 
-                update.speed = speed;
+                update.Speed = speed;
                 string JsonResult = JsonConvert.SerializeObject(update);
                 byte[] vs = Encoding.UTF8.GetBytes(JsonResult);
                 FileStream fs = new FileStream(Config.settingFile, FileMode.Create);
@@ -654,18 +659,25 @@ namespace study_japanese.Views
         {
             this.timer2.Stop();
             this.Hide();
-            this.settingprintMode.ShowDialog();
+            this.settingScreen = new Setting();
+            this.settingScreen.ShowDialog();
 
-            if (this.settingprintMode.exitApp)
+            if (this.settingScreen.exitApp)
             {
                 this.Close();
                 Application.Exit();
             }
             else
             {
-                this.config = this.settingprintMode.getConfig();
-                this.timer2.Interval = this.config.speed * 1000;
-                this.timer2.Start();
+                this.timer2.Interval = Set.settingConfig.Speed * 1000;
+                if (!this.flag.PlayButton)
+                {
+                    this.timer2.Stop();
+                }
+                else
+                {
+                    this.timer2.Start();
+                }
                 this._event();
                 this.Show();
             }
@@ -673,8 +685,8 @@ namespace study_japanese.Views
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            this.logo.Close();
             this.timer1.Stop();
+            this.logo.Close();
         }
 
         private void timer2_Tick(object sender, EventArgs e)
@@ -684,8 +696,8 @@ namespace study_japanese.Views
 
         private void yes_Click(object sender, EventArgs e)
         {
-            this.checkedNewWord = true;
-            this.firstFace = true;
+            this.flag.CheckedNewWord = true;
+            this.flag.FirstFace = true;
             this.timer2.Stop();
             this.newWords.Remove(this.currentWord);
             this.randomList.Remove(this.currentWord);
@@ -693,18 +705,32 @@ namespace study_japanese.Views
             id[0] = this.currentWord.Id.ToString();
             File.AppendAllLines(Config.oldWordFile, id);
             this._event();
-            this.timer2.Start();
-            this.checkedNewWord = false;
+            if (!this.flag.PlayButton)
+            {
+                this.timer2.Stop();
+            }
+            else
+            {
+                this.timer2.Start();
+            }
+            this.flag.CheckedNewWord = false;
         }
 
         private void no_Click(object sender, EventArgs e)
         {
-            this.checkedNewWord = true;
-            this.firstFace = true;
+            this.flag.CheckedNewWord = true;
+            this.flag.FirstFace = true;
             this.timer2.Stop();
             this._event();
-            this.timer2.Start();
-            this.checkedNewWord = false;
+            if (!this.flag.PlayButton)
+            {
+                this.timer2.Stop();
+            }
+            else
+            {
+                this.timer2.Start();
+            }
+            this.flag.CheckedNewWord = false;
         }
 
         private void yes_move(object sender, MouseEventArgs e)
@@ -739,15 +765,14 @@ namespace study_japanese.Views
 
         private void close_Click(object sender, EventArgs e)
         {
-            this.settingprintMode.Close();
             this.Close();
             Application.Exit();
         }
 
         private void play_Click(object sender, EventArgs e)
         {
-            this.playButtonFlag = !this.playButtonFlag;
-            if (!this.playButtonFlag)
+            this.flag.PlayButton = !this.flag.PlayButton;
+            if (!this.flag.PlayButton)
             {
                 this.play.Image = Image.FromFile(@"..\\..\\Image\\icons8_play_30px.png");
                 this.timer2.Stop();
@@ -761,27 +786,41 @@ namespace study_japanese.Views
 
         private void previous_Click(object sender, EventArgs e)
         {
-            this.checkedNewWord = true;
-            this.firstFace = true;
+            this.flag.CheckedNewWord = true;
+            this.flag.FirstFace = true;
             this.timer2.Stop();
             this.index -= 2;
             this._event();
-            this.timer2.Start();
+            if (!this.flag.PlayButton)
+            {
+                this.timer2.Stop();
+            }
+            else
+            {
+                this.timer2.Start();
+            }
         }
 
         private void next_Click(object sender, EventArgs e)
         {
-            this.checkedNewWord = true;
-            this.firstFace = true;
+            this.flag.CheckedNewWord = true;
+            this.flag.FirstFace = true;
             this.timer2.Stop();
             this._event();
-            this.timer2.Start();
+            if (!this.flag.PlayButton)
+            {
+                this.timer2.Stop();
+            }
+            else
+            {
+                this.timer2.Start();
+            }
         }
 
         private void repeat_Click(object sender, EventArgs e)
         {
-            this.repeatButtonFlag = !this.repeatButtonFlag;
-            if (this.repeatButtonFlag)
+            this.flag.RepeatButton = !this.flag.RepeatButton;
+            if (this.flag.RepeatButton)
             {
                 this.repeat.Image = Image.FromFile(@"..\\..\\Image\\icons8_shuffle_20px.png");
             }
@@ -793,27 +832,26 @@ namespace study_japanese.Views
 
         private void upSpeed_Click(object sender, EventArgs e)
         {
-            if (++this.config.speed > 900)
+            if (++Set.settingConfig.Speed > 900)
             {
-                this.config.speed = 900;
+                Set.settingConfig.Speed = 900;
             }
-            this.timer2.Interval = this.config.speed*1000;
-            this.updateSpeed(this.config.speed);
+            this.timer2.Interval = Set.settingConfig.Speed*1000;
+            this.updateSpeed(Set.settingConfig.Speed);
         }
 
         private void DownSpeed_Click(object sender, EventArgs e)
         {
-            if (--this.config.speed <= 0)
+            if (--Set.settingConfig.Speed <= 0)
             {
-                this.config.speed = 1;
+                Set.settingConfig.Speed = 1;
             }
-            this.timer2.Interval = this.config.speed * 1000;
-            this.updateSpeed(this.config.speed);
+            this.timer2.Interval = Set.settingConfig.Speed * 1000;
+            this.updateSpeed(Set.settingConfig.Speed);
         }
 
         private void NewWord_Load(object sender, EventArgs e)
         {
-            
             this.timer3.Interval = 100;
             this.timer3.Start();
         }
@@ -822,7 +860,7 @@ namespace study_japanese.Views
         {
             int cursorX = Cursor.Position.X;
             int cursorY = Cursor.Position.Y;
-            if(((this.screenWidth - this.Width) <= cursorX) && ((this.screenHeight - this.Height) <= cursorY))
+            if(((this.screenWidth - this.panel1.Width) <= cursorX) && ((this.screenHeight - this.panel1.Height) <= cursorY))
             {
                 this.panel1.Visible = true;
             }

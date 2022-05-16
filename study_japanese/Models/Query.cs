@@ -13,16 +13,11 @@ using System.Drawing;
 
 namespace study_japanese.Models
 {
-    public class Query
+    public static class Query
     {
-        private List<TuVungTableDto> allWords = new List<TuVungTableDto>();
+        public static List<TuVungTableDto> allWords = new List<TuVungTableDto>();
 
-        public Query()
-        {
-            connectionDb();
-        }
-
-        private void connectionDb()
+        public static void QueryDB()
         {
             using (NpgsqlConnection conn = GetConnection())
             {
@@ -53,35 +48,9 @@ namespace study_japanese.Models
             return new NpgsqlConnection(Config.sqlConnect);
         }
 
-        public List<TuVungTableDto> getNewWords()
+        public static void RemoveAllWords()
         {
-            List<TuVungTableDto> newWords = new List<TuVungTableDto>();
-            int id;
-            List<int> oldWordsId = new List<int>();
-
-            // đọc id từ đã học
-            string[] oldWordsIdString;
-            if (File.Exists(Config.oldWordFile))
-            {
-                oldWordsIdString = File.ReadAllLines(Config.oldWordFile);
-                foreach (var e in oldWordsIdString)
-                {
-                    if (Int32.TryParse(e, out id))
-                    {
-                        oldWordsId.Add(id);
-                    }
-                }
-            }
-            // so sánh với danh sách từ đã đọc và từ db -> lấy ra từ mới
-            foreach (var e in allWords)
-            {
-                if (!oldWordsId.Contains(e.Id))
-                {
-                    newWords.Add(e);
-                }
-            }
-
-            return newWords;
+            allWords.Clear();
         }
     }
 }

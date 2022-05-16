@@ -18,44 +18,42 @@ namespace study_japanese.Views
 {
     public partial class Setting : Form
     {
-        private SettingInfoDto setConfig = new SettingInfoDto();
         public bool exitApp = false;
 
         public Setting()
         {
             InitializeComponent();
-            this.readSettingFile();
-            
+            this.ShowSettingFile();
         }
 
         private void furigana_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.furigana = furigana.Checked;
+            Set.settingConfig.Furigana = furigana.Checked;
         }
 
         private void nghia_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.means = nghia.Checked;
+            Set.settingConfig.Means = nghia.Checked;
         }
 
         private void hanTu_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.hanTu = hanTu.Checked;
+            Set.settingConfig.HanTu = hanTu.Checked;
         }
 
         private void viDu_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.example = viDu.Checked;
+            Set.settingConfig.Example = viDu.Checked;
         }
 
         private void mode1Mat_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.mode = SettingInfoDto.enmMode.MOTMAT;
+            Set.settingConfig.Mode = SettingInfoDto.enmMode.MOTMAT;
         }
 
         private void mode2Mat_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.mode = SettingInfoDto.enmMode.HAIMAT;
+            Set.settingConfig.Mode = SettingInfoDto.enmMode.HAIMAT;
         }
 
         private void link_Click(object sender, EventArgs e)
@@ -72,12 +70,12 @@ namespace study_japanese.Views
         private void ok_Click(object sender, EventArgs e)
         {
             this.Hide();
-            this.startup(setConfig.startUp);
-            setConfig.speed = Convert.ToInt32(this.textBox1.Text);
-            this.writeSettingFile();
+            this.Startup(Set.settingConfig.StartUp);
+            Set.WriteSettingFile();
+            this.Close();
         }
 
-        private void startup(bool startup)
+        private void Startup(bool startup)
         {
             RegistryKey reg = Registry.CurrentUser.OpenSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Run", true);
             object name = reg.GetValue("Wiki Japan");
@@ -122,79 +120,47 @@ namespace study_japanese.Views
             {
                 this.textBox1.Text = "900";
             }
-        }
-
-        public SettingInfoDto getConfig()
-        {
-            return this.setConfig;
+            Set.settingConfig.Speed = Convert.ToInt32(this.textBox1.Text);
         }
 
         private void random_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.random = true;
+            Set.settingConfig.Random = true;
         }
 
         private void tuanTu_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.random = false;
+            Set.settingConfig.Random = false;
         }
 
         private void effect_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.effect = effect.Checked;
+            Set.settingConfig.Effect = effect.Checked;
         }
 
         private void startUp_CheckedChanged(object sender, EventArgs e)
         {
-            setConfig.startUp = start_up.Checked;
+            Set.settingConfig.StartUp = start_up.Checked;
         }
 
-        private void readSettingFile()
+        public void ShowSettingFile()
         {
-            if (File.Exists(Config.settingFile))
-            {
-                JObject data = JObject.Parse(File.ReadAllText(Config.settingFile));
-                setConfig.furigana = (bool)data["furigana"];
-                setConfig.means = (bool)data["means"];
-                setConfig.hanTu = (bool)data["hanTu"];
-                setConfig.example = (bool)data["example"];
-                setConfig.mode = ((int)data["mode"] == (int)SettingInfoDto.enmMode.MOTMAT) ? SettingInfoDto.enmMode.MOTMAT : SettingInfoDto.enmMode.HAIMAT;
-                setConfig.speed = (int)data["speed"];
-                setConfig.random = (bool)data["random"];
-                setConfig.effect = (bool)data["effect"];
-                setConfig.startUp = (bool)data["startUp"];
-            }
-            else
-            {
-                setConfig.furigana = true;
-                setConfig.means = true;
-                setConfig.hanTu = false;
-                setConfig.example = false;
-                setConfig.mode = SettingInfoDto.enmMode.MOTMAT;
-                setConfig.speed = 5;
-                setConfig.random = true;
-                setConfig.effect = true;
-                setConfig.startUp = true;
-
-                // ghi file setting.json
-                this.writeSettingFile();
-            }
-
+            Set.ReadSettingFile();
             // hien thi
-            this.textBox1.Text = setConfig.speed.ToString();
-            this.furigana.Checked = setConfig.furigana;
-            this.furigana.CheckState = (setConfig.furigana) ? CheckState.Checked : CheckState.Unchecked;
-            this.nghia.Checked = setConfig.means;
-            this.nghia.CheckState = (setConfig.means) ? CheckState.Checked : CheckState.Unchecked;
-            this.hanTu.Checked = setConfig.hanTu;
-            this.hanTu.CheckState = (setConfig.hanTu) ? CheckState.Checked : CheckState.Unchecked;
-            this.viDu.Checked = setConfig.example;
-            this.viDu.CheckState = (setConfig.example) ? CheckState.Checked : CheckState.Unchecked;
-            this.start_up.Checked = setConfig.startUp;
-            this.start_up.CheckState = (setConfig.startUp) ? CheckState.Checked : CheckState.Unchecked; ;
-            this.effect.Checked = setConfig.effect;
-            this.effect.CheckState = (setConfig.effect) ? CheckState.Checked : CheckState.Unchecked;
-            if (setConfig.mode == (int)SettingInfoDto.enmMode.MOTMAT)
+            this.textBox1.Text = Set.settingConfig.Speed.ToString();
+            this.furigana.Checked = Set.settingConfig.Furigana;
+            this.furigana.CheckState = (Set.settingConfig.Furigana) ? CheckState.Checked : CheckState.Unchecked;
+            this.nghia.Checked = Set.settingConfig.Means;
+            this.nghia.CheckState = (Set.settingConfig.Means) ? CheckState.Checked : CheckState.Unchecked;
+            this.hanTu.Checked = Set.settingConfig.HanTu;
+            this.hanTu.CheckState = (Set.settingConfig.HanTu) ? CheckState.Checked : CheckState.Unchecked;
+            this.viDu.Checked = Set.settingConfig.Example;
+            this.viDu.CheckState = (Set.settingConfig.Example) ? CheckState.Checked : CheckState.Unchecked;
+            this.start_up.Checked = Set.settingConfig.StartUp;
+            this.start_up.CheckState = (Set.settingConfig.StartUp) ? CheckState.Checked : CheckState.Unchecked; ;
+            this.effect.Checked = Set.settingConfig.Effect;
+            this.effect.CheckState = (Set.settingConfig.Effect) ? CheckState.Checked : CheckState.Unchecked;
+            if (Set.settingConfig.Mode == (int)SettingInfoDto.enmMode.MOTMAT)
             {
                 this.mode1Mat.Checked = true;
                 this.mode2Mat.Checked = false;
@@ -204,7 +170,7 @@ namespace study_japanese.Views
                 this.mode2Mat.Checked = true;
                 this.mode1Mat.Checked = false;
             }
-            if (setConfig.random)
+            if (Set.settingConfig.Random)
             {
                 this.radioButton3.Checked = true;
                 this.radioButton4.Checked = false;
@@ -214,15 +180,6 @@ namespace study_japanese.Views
                 this.radioButton4.Checked = true;
                 this.radioButton3.Checked = false;
             }
-        }
-
-        private void writeSettingFile()
-        {
-            string JsonResult = JsonConvert.SerializeObject(setConfig);
-            byte[] vs = Encoding.UTF8.GetBytes(JsonResult);
-            FileStream fs = new FileStream(Config.settingFile, FileMode.Create);
-            fs.Write(vs, 0, JsonResult.Length);
-            fs.Close();
         }
 
         private void ok_move(object sender, MouseEventArgs e)

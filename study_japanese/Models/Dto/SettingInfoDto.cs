@@ -14,15 +14,14 @@ namespace study_japanese.Models.Dto
             HAIMAT = 1
         }
 
-        public bool furigana { get; set; }
-        public bool means { get; set; }
-        public bool hanTu { get; set; }
-        public bool example { get; set; }
-        public enmMode mode { get; set; }
-        public int speed { get; set; }
-        public bool random { get; set; }
-        public bool startUp { get; set; }
-
-        public bool effect { get; set; }
+        public bool Furigana { get; set; }
+        public bool Means { get; set; }
+        public bool HanTu { get; set; }
+        public bool Example { get; set; }
+        public enmMode Mode { get; set; }
+        public int Speed { get; set; }
+        public bool Random { get; set; }
+        public bool StartUp { get; set; }
+        public bool Effect { get; set; }
     }
 }
