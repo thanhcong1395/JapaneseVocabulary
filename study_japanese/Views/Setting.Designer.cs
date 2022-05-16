@@ -53,6 +53,9 @@ namespace study_japanese.Views
             this.radioButton4 = new System.Windows.Forms.RadioButton();
             this.exit = new System.Windows.Forms.PictureBox();
             this.ok = new System.Windows.Forms.PictureBox();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label8 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             this.panel1.SuspendLayout();
             this.panel3.SuspendLayout();
@@ -66,7 +69,7 @@ namespace study_japanese.Views
             this.pictureBox1.Image = ((System.Drawing.Image)(resources.GetObject("pictureBox1.Image")));
             this.pictureBox1.Location = new System.Drawing.Point(-3, -6);
             this.pictureBox1.Name = "pictureBox1";
-            this.pictureBox1.Size = new System.Drawing.Size(471, 115);
+            this.pictureBox1.Size = new System.Drawing.Size(474, 115);
             this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
@@ -196,9 +199,9 @@ namespace study_japanese.Views
             this.link.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.link.Font = new System.Drawing.Font("Arial", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.link.ForeColor = System.Drawing.Color.White;
-            this.link.Location = new System.Drawing.Point(364, 401);
+            this.link.Location = new System.Drawing.Point(359, 437);
             this.link.Name = "link";
-            this.link.Size = new System.Drawing.Size(99, 16);
+            this.link.Size = new System.Drawing.Size(98, 16);
             this.link.TabIndex = 10;
             this.link.Text = "link trang web";
             this.link.Click += new System.EventHandler(this.link_Click);
@@ -242,11 +245,11 @@ namespace study_japanese.Views
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label6.ForeColor = System.Drawing.Color.White;
-            this.label6.Location = new System.Drawing.Point(24, 333);
+            this.label6.Location = new System.Drawing.Point(24, 336);
             this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(93, 22);
+            this.label6.Size = new System.Drawing.Size(86, 22);
             this.label6.TabIndex = 18;
-            this.label6.Text = "Hệ thống";
+            this.label6.Text = "T/g nghỉ";
             // 
             // start_up
             // 
@@ -255,7 +258,7 @@ namespace study_japanese.Views
             this.start_up.CheckState = System.Windows.Forms.CheckState.Checked;
             this.start_up.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.start_up.ForeColor = System.Drawing.Color.White;
-            this.start_up.Location = new System.Drawing.Point(162, 364);
+            this.start_up.Location = new System.Drawing.Point(162, 408);
             this.start_up.Name = "start_up";
             this.start_up.Size = new System.Drawing.Size(268, 26);
             this.start_up.TabIndex = 19;
@@ -270,7 +273,7 @@ namespace study_japanese.Views
             this.effect.CheckState = System.Windows.Forms.CheckState.Checked;
             this.effect.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.effect.ForeColor = System.Drawing.Color.White;
-            this.effect.Location = new System.Drawing.Point(162, 332);
+            this.effect.Location = new System.Drawing.Point(162, 376);
             this.effect.Name = "effect";
             this.effect.Size = new System.Drawing.Size(181, 26);
             this.effect.TabIndex = 20;
@@ -349,12 +352,49 @@ namespace study_japanese.Views
             this.ok.MouseLeave += new System.EventHandler(this.ok_leave);
             this.ok.MouseMove += new System.Windows.Forms.MouseEventHandler(this.ok_move);
             // 
+            // textBox2
+            // 
+            this.textBox2.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.textBox2.Location = new System.Drawing.Point(162, 333);
+            this.textBox2.MaxLength = 3;
+            this.textBox2.Name = "textBox2";
+            this.textBox2.Size = new System.Drawing.Size(78, 29);
+            this.textBox2.TabIndex = 46;
+            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.textBox2.TextChanged += new System.EventHandler(this.HideTime);
+            this.textBox2.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.HideTime_KeyPress);
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.ForeColor = System.Drawing.Color.White;
+            this.label7.Location = new System.Drawing.Point(24, 377);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(93, 22);
+            this.label7.TabIndex = 47;
+            this.label7.Text = "Hệ thống";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Arial", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.ForeColor = System.Drawing.Color.White;
+            this.label8.Location = new System.Drawing.Point(260, 336);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(49, 22);
+            this.label8.TabIndex = 48;
+            this.label8.Text = "giây";
+            // 
             // Setting
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.Gray;
-            this.ClientSize = new System.Drawing.Size(464, 426);
+            this.ClientSize = new System.Drawing.Size(469, 462);
+            this.Controls.Add(this.label8);
+            this.Controls.Add(this.label7);
+            this.Controls.Add(this.textBox2);
             this.Controls.Add(this.exit);
             this.Controls.Add(this.ok);
             this.Controls.Add(this.panel3);
@@ -417,5 +457,8 @@ namespace study_japanese.Views
         private System.Windows.Forms.RadioButton radioButton4;
         private System.Windows.Forms.PictureBox exit;
         private System.Windows.Forms.PictureBox ok;
+        private System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label8;
     }
 }

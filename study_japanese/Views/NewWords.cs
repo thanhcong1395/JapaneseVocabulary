@@ -64,6 +64,7 @@ namespace study_japanese.Views
                     this.flag.PlayButton = true;
                     this.flag.RepeatButton = false;
                     this.flag.CheckedNewWord = false;
+                    this.flag.Hidden = false;
                     this.timer2.Interval = Set.settingConfig.Speed * 1000;
                 }
             );
@@ -175,42 +176,49 @@ namespace study_japanese.Views
                     {
                         // 1st face three lines, no 2nd face
                         this.threeLinesScreen(this.nextWord.HanTu, this.nextWord.Furigana, this.nextWord.Means);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Means, this.lineOne, this.lineTwo);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == false && Set.settingConfig.Means == false && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.Furigana);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.HanTu);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.Means);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
@@ -223,6 +231,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.exampleScreen(this.nextWord.Example);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -237,6 +246,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.exampleScreen(this.nextWord.Example);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -251,6 +261,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.exampleScreen(this.nextWord.Example);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -265,6 +276,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.exampleScreen(this.nextWord.Example);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -273,23 +285,27 @@ namespace study_japanese.Views
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.Example, this.lineOne, this.lineTwo);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == true)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
                     {
                         // 1st face two lines, no 2nd face
                         this.twoLinesScreen(this.nextWord.HanTu, this.nextWord.Means, this.lineOne, this.lineTwo);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else
                     {
                         this.noneScreen();
+                        this.flag.Hidden = true;
                     }
                     break;
                 case SettingInfoDto.enmMode.HAIMAT:
@@ -299,10 +315,12 @@ namespace study_japanese.Views
                         if (this.flag.FirstFace)
                         {
                             this.twoLinesScreen(this.nextWord.Furigana, this.nextWord.HanTu, this.lineTwo, this.lineOne);
+                            this.flag.Hidden = true;
                         }
                         else
                         {
                             this.oneLineScreen(this.nextWord.Means);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -317,6 +335,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.oneLineScreen(this.nextWord.HanTu);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -331,6 +350,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.oneLineScreen(this.nextWord.Means);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -345,6 +365,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.oneLineScreen(this.nextWord.Means);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -353,18 +374,21 @@ namespace study_japanese.Views
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.Furigana);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == true && Set.settingConfig.Means == false && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.HanTu);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == false && Set.settingConfig.HanTu == false && Set.settingConfig.Means == true && Set.settingConfig.Example == false)
                     {
                         // 1st face two lines, no 2nd face
                         this.oneLineScreen(this.nextWord.Means);
+                        this.flag.Hidden = true;
                         return;
                     }
                     else if (Set.settingConfig.Furigana == true && Set.settingConfig.HanTu == true && Set.settingConfig.Means == true && Set.settingConfig.Example == true)
@@ -377,6 +401,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, this.lineOne, this.lineTwo);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -391,6 +416,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.exampleScreen(this.nextWord.Example);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -405,6 +431,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, this.lineOne, this.lineTwo);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -419,6 +446,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.twoLinesScreen(this.nextWord.Means, this.nextWord.Example, this.lineOne, this.lineTwo);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -429,11 +457,11 @@ namespace study_japanese.Views
                         if (this.flag.FirstFace)
                         {
                             this.oneLineScreen(this.nextWord.Furigana);
-                            this.flag.FirstFace = false;
                         }
                         else
                         {
                             this.exampleScreen(this.nextWord.Example);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -448,6 +476,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.exampleScreen(this.nextWord.Example);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -462,6 +491,7 @@ namespace study_japanese.Views
                         else
                         {
                             this.exampleScreen(this.nextWord.Example);
+                            this.flag.Hidden = true;
                         }
                         this.flag.FirstFace = !this.flag.FirstFace;
                         return;
@@ -673,7 +703,7 @@ namespace study_japanese.Views
             this.timer2.Stop();
             this.Hide();
             //this.settingScreen = new Setting();
-            this.settingScreen.Show();
+            this.settingScreen.ShowDialog();
 
             if (this.settingScreen.exitApp)
             {
@@ -702,10 +732,24 @@ namespace study_japanese.Views
             //this.logo.Close();
             this.logo.Dispose();
         }
-
+        private int HiddenCnt = 1;
         private void timer2_Tick(object sender, EventArgs e)
         {
-            this._event();
+            
+            if (this.flag.Hidden)
+            {
+                this.flag.Hidden = false;
+                this.timer2.Interval = Set.settingConfig.HiddenTime * 1000;
+                this.timer2.Start();
+                this.Hide();
+            }
+            else
+            {
+                this._event();
+                this.timer2.Interval = Set.settingConfig.Speed * 1000;
+                this.timer2.Start();
+                this.Show();
+            }
         }
 
         private void yes_Click(object sender, EventArgs e)
