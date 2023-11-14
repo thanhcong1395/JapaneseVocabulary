@@ -23,5 +23,6 @@ namespace study_japanese.Models.Dto
         public bool Random { get; set; }
         public bool StartUp { get; set; }
         public bool Effect { get; set; }
+        public int HiddenTime { get; set; }
     }
 }

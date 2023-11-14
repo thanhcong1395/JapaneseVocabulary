@@ -31,6 +31,7 @@ namespace study_japanese.Views
             Set.ReadSettingFile();
             // hien thi
             this.textBox1.Text = Set.settingConfig.Speed.ToString();
+            this.textBox2.Text = Set.settingConfig.HiddenTime.ToString();
             this.furigana.Checked = Set.settingConfig.Furigana;
             this.furigana.CheckState = (Set.settingConfig.Furigana) ? CheckState.Checked : CheckState.Unchecked;
             this.nghia.Checked = Set.settingConfig.Means;
@@ -128,9 +129,9 @@ namespace study_japanese.Views
 
         private void ok_Click(object sender, EventArgs e)
         {
-            this.Hide();
             this.Startup(Set.settingConfig.StartUp);
             Set.WriteSettingFile();
+            this.Hide();
             //this.Close();
         }
 
@@ -149,16 +150,18 @@ namespace study_japanese.Views
         private void SpeedChanged(object sender, EventArgs e)
         {
             int box = 0;
-            Int32.TryParse(this.textBox1.Text, out box);
-            if(box == 0 && this.textBox1.Text != string.Empty)
+            if (Int32.TryParse(this.textBox1.Text, out box))
             {
-                this.textBox1.Text = "1";
+                if (box == 0 && this.textBox1.Text != string.Empty)
+                {
+                    this.textBox1.Text = "1";
+                }
+                else if (box > 900 && this.textBox1.Text != string.Empty)
+                {
+                    this.textBox1.Text = "900";
+                }
+                Set.settingConfig.Speed = Convert.ToInt32(this.textBox1.Text);
             }
-            else if(box > 900 && this.textBox1.Text != string.Empty)
-            {
-                this.textBox1.Text = "900";
-            }
-            Set.settingConfig.Speed = Convert.ToInt32(this.textBox1.Text);
         }
 
         private void random_CheckedChanged(object sender, EventArgs e)
@@ -201,5 +204,33 @@ namespace study_japanese.Views
             this.exit.Image = Image.FromFile(@"..\\..\Image\\icons8_multiply_35px.png");
         }
 
+        private void HideTime(object sender, EventArgs e)
+        {
+            int box = 0;
+            if(Int32.TryParse(this.textBox2.Text, out box))
+            {
+                if (box == 0 && this.textBox2.Text != string.Empty)
+                {
+                    this.textBox2.Text = "1";
+                }
+                else if (box > 900 && this.textBox2.Text != string.Empty)
+                {
+                    this.textBox2.Text = "900";
+                }
+                Set.settingConfig.HiddenTime = Convert.ToInt32(this.textBox2.Text);
+            }
+        }
+
+        private void HideTime_KeyPress(object sender, KeyPressEventArgs e)
+        {
+            if (!char.IsNumber(e.KeyChar) && (!char.IsControl(e.KeyChar)))
+            {
+                e.Handled = true;
+            }
+            else
+            {
+                e.Handled = false;
+            }
+        }
     }
 }

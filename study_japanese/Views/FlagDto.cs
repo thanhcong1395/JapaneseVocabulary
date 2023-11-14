@@ -12,5 +12,6 @@ namespace study_japanese.Views
         public bool PlayButton { get; set; }
         public bool RepeatButton { get; set; }
         public bool CheckedNewWord { get; set; }
+        public bool Hidden { get; set; }
     }
 }

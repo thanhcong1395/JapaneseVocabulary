@@ -25,6 +25,7 @@ namespace study_japanese.Models
             settingConfig.Random = true;
             settingConfig.Effect = true;
             settingConfig.StartUp = true;
+            settingConfig.HiddenTime = 10;
         }
 
         public static void WriteSettingFile()
@@ -50,6 +51,7 @@ namespace study_japanese.Models
                 settingConfig.Random = (bool)data["Random"];
                 settingConfig.Effect = (bool)data["Effect"];
                 settingConfig.StartUp = (bool)data["StartUp"];
+                settingConfig.HiddenTime = (int)data["HiddenTime"];
             }
             else
             {
